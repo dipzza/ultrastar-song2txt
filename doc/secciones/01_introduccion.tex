@@ -1,3 +1,52 @@
 \chapter{Introducción}
 
-Este proyecto es software libre, y está liberado con la licencia \cite{gplv3}.
+Este proyecto es software libre, y está liberado con la licencia AGPLv3\cite{agpl}.
+
+\section{Motivación}
+
+Existen varios vídeo juegos de Karaoke de software libre con cierta popularidad (\href{https://github.com/UltraStar-Deluxe/USDX}{usdx}, \href{https://github.com/Vocaluxe/Vocaluxe}{vocaluxe}, \href{https://github.com/performous/performous}{performous}, ...) donde los jugadores consiguen puntos haciendo coincidir al cantar su tono con el de la canción original.
+
+Para añadir una canción es necesario crear un archivo de texto con un formato estándar (el de UltraStar) que contiene metadatos de la canción, la letra separada en fonemas y el segundo y tono en el que se canta cada fonema.
+
+Este proceso de añadir canciones es complejo y largo, especialmente si se carece de la experiencia musical para averiguar el tono de la voz.
+
+Por este motivo, este trabajo pretende la creación de herramientas que automaticen parte de la creación de los archivos de texto.
+
+Estas herramientas serían de gran ayuda para agilizar el trabajo de los usuarios que ya crean canciones de forma regular y también para reducir la barrera de entrada y permitir a usuarios sin conocimiento musical añadir canciones.
+
+\section{Estado del Arte}
+
+Aunque el archivo de texto podría crearse a mano normalmente se hace con ayuda de programas dedicados. El proceso más cómodo es usando dos programas como se describe a continuación.
+
+\href{https://github.com/UltraStar-Deluxe/UltraStar-Creator}{UltraStar Creator} hace un proceso guiado con las siguientes funciones:
+
+\begin{itemize}
+	\item Extrae metadatos si seleccionas un mp3, te pide rellenar los que falten
+	\item Detecta automáticamente el BPM de la canción
+	\item Pide la letra de la canción y ofrece separar los fonemas según el idioma automáticamente
+	\item Permite añadir el segundo de cada fonema escuchando la canción a distintas velocidades y pulsando la barra espaciadora cada vez que escuches un nuevo fonema
+\end{itemize}
+
+Tras este proceso se obtiene un archivo de texto base para trabajar sobre el, después se puede usar \href{https://github.com/sarutasan72/Yass}{Yass} que posee una mejor interfaz para afinar la sincronización de los fonemas en el tiempo y asignar el tono de cada fonema, la parte que consume más tiempo.
+
+
+\section{Objetivos}
+
+\subsection{Principal}
+
+\textbf{Automatizar la detección de las notas de cada fonema}. Es la parte más compleja y que más tiempo requiere, por lo que sería la más productiva de automatizar.
+
+\subsection{Opcionales}
+
+Automatizar los siguientes procesos
+
+\begin{itemize}
+	\item Completar metadatos
+	\item Obtener letra
+	\item Separar fonemas según idioma
+	\item Estimar BPM
+\end{itemize}
+
+Se dejan como secundarios ya que o son fáciles de realizar manualmente, o ya se encuentran automatizados en UltraStar Creator.
+
+No se fija como objetivo la sincronización automática de los fonemas en el tiempo, aunque sería interesante para un trabajo futuro.
