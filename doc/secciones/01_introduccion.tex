@@ -4,49 +4,22 @@ Este proyecto es software libre, y está liberado con la licencia AGPLv3\cite{ag
 
 \section{Motivación}
 
-Existen varios videojuegos de Karaoke de software libre con cierta popularidad (\href{https://github.com/UltraStar-Deluxe/USDX}{\textit{UltraStar Deluxe}}, \href{https://github.com/Vocaluxe/Vocaluxe}{\textit{Vocaluxe}}, \href{https://github.com/performous/performous}{\textit{Performous}}, ...) donde los jugadores consiguen puntos haciendo coincidir al cantar su tono con el de la canción original.
+El karaoke es un tipo de entretenimiento consistente en cantar junto a música grabada, normalmente con la ayuda de una pantalla en la que se muestra la letra de la canción e indicaciones de cuando hay que cantar cada parte.
 
-Para añadir una canción es necesario crear un archivo de texto con un formato estándar (el de UltraStar) que contiene metadatos de la canción, la letra separada en fonemas y el segundo y tono en el que se canta cada fonema.
+Mucha gente disfruta del karaoke como forma de ocio o diversión, cumpliendo el sueño de ser cantante por unos momentos. Por esta razón, existen multitud de programas dirigidos a los entusiastas del karaoke.
 
-Este proceso de añadir canciones es complejo y largo, especialmente si se carece de la experiencia musical para averiguar el tono de la voz.
+Un tipo de estos programas son los videojuegos de karaoke, que ofrecen todavía más ayuda al mostrar el tono en el que se está cantando y como de lejos se encuentra este del correcto. Además, al medir la precisión con la que se ha cantado la canción permiten competir con otras personas o disfrutar buscando la mejora personal.
 
-Por este motivo, este trabajo pretende la creación de herramientas que automaticen parte de la creación de los archivos de texto.
+Sin embargo, los aficionados de los videojuegos de karaoke tienen que lidiar frecuentemente con un problema cuando quieren cantar su canción favorita: que no esté disponible.
 
-Estas herramientas serían de gran ayuda para agilizar el trabajo de los usuarios que ya crean canciones de forma regular y también para reducir la barrera de entrada y permitir a usuarios sin conocimiento musical añadir canciones.
+Aunque el desarrollo de programas de software libre y gratuitos tanto de videojuegos de karaoke (\href{https://github.com/UltraStar-Deluxe/USDX}{\textit{UltraStar Deluxe}}, \href{https://github.com/Vocaluxe/Vocaluxe}{\textit{Vocaluxe}}, \href{https://github.com/performous/performous}{\textit{Performous}}, ...) como de herramientas para la creación de canciones (\href{https://github.com/sarutasan72/Yass}{\textit{Yass}}, \href{https://github.com/UltraStar-Deluxe/UltraStar-Creator}{\textit{UltraStar Creator}}, ...) ha ayudado al desarrollo de comunidades donde se crean y comparten canciones para videojuegos de karaoke, la mayoría de canciones siguen sin estar disponibles, especialmente aquellas más recientes o menos famosas.
 
-\section{Estado del arte}
-
-Aunque el archivo de texto podría crearse a mano normalmente se hace con ayuda de programas dedicados. El proceso más cómodo es usando dos programas como se describe a continuación.
-
-\href{https://github.com/UltraStar-Deluxe/UltraStar-Creator}{UltraStar Creator} hace un proceso guiado con las siguientes funciones:
-
-\begin{itemize}
-	\item Extrae metadatos si seleccionas un mp3, te pide rellenar los que falten
-	\item Detecta automáticamente el BPM de la canción
-	\item Pide la letra de la canción y ofrece separar los fonemas según el idioma automáticamente
-	\item Permite añadir el segundo de cada fonema escuchando la canción a distintas velocidades y pulsando la barra espaciadora cada vez que escuches un nuevo fonema
-\end{itemize}
-
-Tras este proceso se obtiene un archivo de texto base para trabajar sobre el, después se puede usar \href{https://github.com/sarutasan72/Yass}{Yass} que posee una mejor interfaz para afinar la sincronización de los fonemas en el tiempo y asignar el tono de cada fonema, la parte que consume más tiempo.
+Una causa de que la selección de canciones disponibles sea tan limitada es que el proceso de creación de canciones para videojuegos de karaoke es complejo, largo y requiere conocimientos musicales.
 
 
-\section{Objetivos}
+\section{Objetivo}
 
-\subsection{Principal}
+Este trabajo persigue ayudar en la creación de canciones para videojuegos de karaoke, reduciendo la barrera de entrada para personas sin conocimientos musicales y el tiempo que necesitan invertir aquellas con conocimientos musicales.
 
-\textbf{Automatizar la detección de las notas de cada fonema}. Es la parte más compleja y que más tiempo requiere, por lo que sería la más productiva de automatizar.
 
-\subsection{Opcionales}
-
-Automatizar los siguientes procesos
-
-\begin{itemize}
-	\item Completar metadatos
-	\item Obtener letra
-	\item Separar fonemas según idioma
-	\item Estimar BPM
-\end{itemize}
-
-Se dejan como secundarios ya que o son fáciles de realizar manualmente, o ya se encuentran automatizados en UltraStar Creator.
-
-No se fija como objetivo la sincronización automática de los fonemas en el tiempo, aunque sería interesante para un trabajo futuro.
+Para ello se pretende \textbf{crear una herramienta que permita automatizar la creación de canciones para videojuegos de karaoke.}
