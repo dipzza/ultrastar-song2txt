@@ -10,25 +10,35 @@ jobs:
         steps:
             - name: Set up Git repository
               uses: actions/checkout@v2
-            - name: Check LaTeX document
+            - name: Check Spanish text
               uses: ChiefGokhlayeh/textidote-action@v5
-              id: lint
+              id: check_es
               with:
                   root_file: doc/proyecto.tex
 
-                  ## Implied defaults:
+                  ## Defaults:
                   # working_directory:
                   # report_type: html
                   # report_file: report.html
 
-                  ## Use this setting to pass custom arguments options to
-                  ## TeXtidote (such as what grammar checker to use).
-                  args: --check es
-            - name: Upload TeXtidote report
+                  ## Custom arguments for TeXtidote
+                  args: --check es --remove otherlanguage
+            - name: Upload TeXtidote spanish report
               uses: actions/upload-artifact@v2
               with:
-                  name: textidote_report
+                  name: textidote_report_es
                   path: report.html
-            - name: Throw error if linter warnings exist
-              if: ${{ steps.lint.outputs.num_warnings != 0 }}
-              run: 'echo "::error file=doc/proyecto.tex::num_warnings: ${{ steps.lint.outputs.num_warnings }}"; exit 1;'
+            - name: Check English text
+              uses: ChiefGokhlayeh/textidote-action@v5
+              id: check_en
+              with:
+                  root_file: doc/prefacios/english_abstract.tex
+                  args: --check en --read-all
+            - name: Upload TeXtidote english report
+              uses: actions/upload-artifact@v2
+              with:
+                  name: textidote_report_en
+                  path: report.html
+            - name: Throw error if warnings exist
+              if: ${{ steps.check_es.outputs.num_warnings != 0 || steps.check_en.outputs.num_warnings != 0}}
+              run: 'echo "::error file=doc/proyecto.tex::num_warnings_es: ${{ steps.check_es.outputs.num_warnings }}, num_warnings_en: ${{ steps.check_en.outputs.num_warnings }}"; exit 1;'
