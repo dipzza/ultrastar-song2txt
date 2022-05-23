@@ -18,7 +18,7 @@ jobs:
               with:
                   root_file: doc/proyecto.tex
                   report_file: report_es.html
-                  args: --check es --remove otherlanguage $IgnoreArgs
+                  args: --check es --remove otherlanguage --dict .github/workflows/words-allowlist.txt $IgnoreArgs
             - name: Check English text
               uses: ChiefGokhlayeh/textidote-action@v5
               id: check_en
