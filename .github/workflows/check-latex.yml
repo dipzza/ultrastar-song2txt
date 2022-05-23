@@ -13,14 +13,14 @@ jobs:
             - name: Set up Git repository
               uses: actions/checkout@v2
             - name: Check Spanish text
-              uses: ChiefGokhlayeh/textidote-action@v5
+              uses: dipzza/textidote-action@v6
               id: check_es
               with:
                   root_file: doc/proyecto.tex
                   report_file: report_es.html
                   args: --check es --remove otherlanguage --dict .github/workflows/words-allowlist.txt $IgnoreArgs
             - name: Check English text
-              uses: ChiefGokhlayeh/textidote-action@v5
+              uses: dipzza/textidote-action@v6
               id: check_en
               with:
                   root_file: doc/prefacios/english_abstract.tex
