@@ -8,7 +8,7 @@ jobs:
     check_latex:
         runs-on: ubuntu-latest
         env:
-            IgnoreArgs: --ignore sh:seclen,sh:stacked --remove-macros tableofcontents,listoffigures,listoftables,begin,centeroffset,oddsidemargin,evensidemargin,centering,bfseries,end,cleardoublepage
+            IgnoreArgs: --ignore sh:seclen,sh:stacked --remove-macros tableofcontents,listoffigures,listoftables,begin,centeroffset,oddsidemargin,evensidemargin,centering,bfseries,end,cleardoublepage,setlength
         steps:
             - name: Set up Git repository
               uses: actions/checkout@v2

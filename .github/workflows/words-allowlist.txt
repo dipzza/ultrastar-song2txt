@@ -1,9 +1,15 @@
 definirlos
 Linux
+UltraStar
 Deluxe
+Vocaluxe
+Performous
+Yass
 Creator
 issues
 Song
 txt
 Merelo
 Guervós
+to
+AGPLv3
