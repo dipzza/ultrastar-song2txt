@@ -1,12 +1,30 @@
 \chapter{Planificación}
 
-\section{Metodología utilizada}
+\section{Desarrollo ágil}
+
+
+Con el objetivo de desarrollar software de calidad, flexible y adaptado a las necesidades de los clientes, se han seguido los principios del desarrollo ágil popularizados en 2001 por el manifiesto ágil \cite{beck2001agile}. Algunos de estos principios de acorde a los cuales se ha definido la metodología del desarrollo son:
+
+\begin{itemize}
+	\item{El desarrollo debe realizarse de forma \textbf{iterativa e incremental}, entregando temprano y continuamente cambios que añadan valor.}
+	\item{Hay que buscar \textbf{la excelencia técnica} y seguir buenas prácticas para garantizar la flexibilidad y comprensibilidad del proyecto.}
+	\item{El diseño es esencial, pero debe \textbf{evitarse la documentación excesiva}, ya que, conseguir código funcional lo antes posible es el mejor modo de confirmar que se entienden los requisitos del cliente.}
+	\item{Es necesario \textbf{revisar el trabajo frecuentemente}, para aprender a hacerlo de manera más eficiente, mantener la calidad del software al detectar fallos y adaptarlo a nuevos requisitos.}
+\end{itemize}
+
+Con el propósito de cumplir estos principios se han utilizado una serie de herramientas y técnicas durante todo el proceso de desarrollo, que serán descritas en el resto de secciones del capítulo.
+
+\section{Control de versiones}
+
+El uso de un sistema de control de versiones que lleve un registro de los cambios es fundamental en el desarrollo de software, ya que, permite coordinar el trabajo entre desarrolladores, deshacer cambios incorrectos, mantener distintas versiones del código y un largo etcétera de ventajas.
+
+Por este motivo, se ha elegido \textit{Git} como software de control de versiones y GitHub tanto para el alojamiento en un \href{https://github.com/dipzza/ultrastar-song2txt}{repositorio público} como plataforma de organización, colaboración y pruebas.
 
 \section{Análisis de usuarios}
 
 Para empatizar con los usuarios que acabarán usando el proyecto es necesario definirlos claramente, pudiendo así enfocar el proyecto a resolver sus problemas.
 
-Con esta intención, utilizando la metodología de personas basadas en roles \cite{role-personas}, se han definido los siguientes roles que describen a un grupo de personas que realizan la misma función.
+Con esta intención, empleando la metodología de personas basadas en roles \cite{role-personas}, se han definido los siguientes roles que describen a un grupo de personas que realizan la misma función.
 
 \begin{enumerate}	
 	\item{Miembro del tribunal}
@@ -34,9 +52,140 @@ Con esta intención, utilizando la metodología de personas basadas en roles \ci
 	\end{itemize}
 \end{enumerate}
 
+\section{Historias de Usuario}
+
+Se han creado historias de usuario para especificar las necesidades de los usuarios (y, por lo tanto, los requisitos del proyecto). Son comúnmente utilizadas en el desarrollo ágil, ya que, permiten administrar los requisitos de los usuarios rápidamente sin gran cantidad de documentos formales, facilitando la adaptación a requisitos cambiantes. Cada historia de usuario debe tener las siguientes características \cite{hujj}:
+
+\begin{itemize}
+	\item{Identifica el tipo de usuario protagonista de la historia.}
+	\item{Está en el dominio del problema, es narrada desde el punto de vista del usuario y expresa el beneficio que obtendría este una vez se implemente la historia de usuario.}
+	\item{Para completar la historia de usuario será necesario realizar tareas que provoquen cambios en los productos a entregar}
+\end{itemize}
+
+\noindent{Se han definido las siguientes historias de usuario:}
+
+\subsubsection*{\href{https://github.com/dipzza/ultrastar-song2txt/issues/7}{[HU01] Creador Karaoke - Detección de tonos}}
+
+Como creador de canciones para karaoke quiero poder asignar los tonos de la canción en menos tiempo y con menor dificultad.
+
+\subsubsection*{\href{https://github.com/dipzza/ultrastar-song2txt/issues/8}{[HU02] Creador Karaoke - Búsqueda de metadatos}}
+
+Como creador de canciones para karaoke quiero evitar tener que buscar e introducir manualmente información sobre la canción.
+
+\subsubsection*{\href{https://github.com/dipzza/ultrastar-song2txt/issues/9}{[HU03] Miembro del tribunal - Criterios de Evaluación}}
+
+Como miembro del tribunal, me gustaría recibir una presentación y un informe en los que se pueda comprobar fácilmente que se han cumplido los criterios de evaluación. Para ello en estos debería reflejarse que el estudiante:
+\begin{itemize}
+	\item{Utiliza fuentes de información variadas, válidas y fiables y selecciona la relevante para el objetivo del trabajo.}
+    \item{Toma decisiones adecuadas al contexto y plantea soluciones sirviéndose del conocimiento adquirido.}
+    \item{Detecta y analiza oportunidades para hacer nuevas propuestas.}
+    \item{Propone soluciones adecuadas y justifica las decisiones tomadas para resolver problemas complejos.}
+    \item{Usa recursos formales e informales para documentar adecuadamente el proceso de desarrollo: concepción, planificación, análisis, diseño, implementación, pruebas, etc.}
+    \item{Muestra claridad y comprensión en la redacción, organizando la información adecuadamente y empleando los recursos adecuados para el discurso escrito.}
+    \item{Muestra claridad y comprensión en la expresión oral, organizando la información adecuadamente y utilizando los recursos adecuados para el discurso oral.}
+\end{itemize}
 
 
+\subsubsection*{\href{https://github.com/dipzza/ultrastar-song2txt/issues/10}{[HU04] Programador - Aplicación modular}}
 
-\section{Temporización}
+Como programador querría que cada funcionalidad del proyecto fuera independiente, para poder reutilizar solo aquella que necesite al desarrollar otros programas.
 
-\section{Seguimiento del desarrollo}
+\subsubsection*{\href{https://github.com/dipzza/ultrastar-song2txt/issues/11}{[HU05] Programador - Estudio de prestaciones}}
+
+Como programador me gustaría poder ver pruebas detalladas sobre el rendimiento de las soluciones implementadas, para poder elegir con datos objetivos la solución más adecuada.
+
+
+\section{Hitos}
+
+Siguiendo los principios del desarrollo ágil el desarrollo debería realizarse de forma \textbf{incremental}, ya que de esta forma es posible presentar resultados frecuentemente y cambiar o adaptar los requerimientos.
+
+Para ello, se han definido hitos, que describen una serie de \textbf{productos mínimamente viables} (\textit{PMV}) que podrían entregarse. Cada uno es más complejo que el anterior incluyendo todo el desarrollo previo, tiene un criterio de aceptación y avanza hacia el cumplimiento de las historias de usuario.
+
+Adicionalmente, los hitos están compuestos de \textit{issues} definidos y asociados al hito correspondiente en el repositorio de GitHub. Los issues son problemas siempre enmarcados en alcanzar un hito y que, por lo tanto, al ser resueltos avanzan en el cumplimiento de las historias de usuario.
+
+% Añadir enlace a hitos, en los títulos o tal vez uno general aparte
+
+\subsection*{Hito 0: Infraestructura y planificación}
+
+El primer PMV consiste en la planificación inicial y la configuración del repositorio. Para ser aceptado debe contener al menos los siguientes elementos:
+
+\begin{itemize}
+	\item{Análisis de usuarios.}
+	\item{Historias de usuario.}
+	\item{Hitos.}
+	\item{Automatización en el repositorio para comprobar la ortografía de la memoria y errores sintácticos y de estilo en el código.}
+	\item{Motivación, objetivos y capítulos metodológicos redactados en la memoria.}
+\end{itemize}
+
+\subsection*{Hito 1: Arquitectura básica para la detección de notas}
+
+Diseño de las clases básicas necesarias para detectar las notas a partir de un archivo de audio y guardarlas en un formato estandarizado de texto de videojuegos de karaoke. Inicialmente con una solución simple, aunque esta no posea una precisión alta.
+
+Para la aceptación del PMV este debe contener tests para cada clase y al menos las definiciones de las clases y sus funciones. Además, la memoria debe reflejar todas las decisiones tomadas en el proceso.
+
+\subsection*{Hito 2: Evaluación de la detección de notas}
+
+Es necesario proveer un análisis de las prestaciones de las soluciones implementadas. Para aceptar este PMV este debe contener:
+\begin{itemize}
+	\item{Selección de métricas adecuadas para medir la calidad de la detección de notas}
+	\item{Selección o creación de un conjunto de datos para la evaluación}
+	\item{Código para realizar la evaluación correspondiente}
+	\item{Redacción del Análisis y la comparación de los resultados}
+\end{itemize}
+
+\section{Control de la calidad}
+
+Con la intención de construir software de calidad desde el principio, cumplir los principios de buenas prácticas y que el software este preparado para entregar constantemente se ha aplicado \textbf{integración continua}, fusionando cambios a la línea principal de desarrollo solo una vez que estos pasen por test automatizados altamente estrictos.
+
+Al subir cualquier cambio a GitHub se ejecutan automáticamente las pruebas. Para el código se han configurado las siguientes comprobaciones:
+
+\begin{itemize}
+	\item{Errores, adherencia a la guía de estilo \href{https://peps.python.org/pep-0008/}{PEP8} y complejidad del código.}
+	\item{Test unitarios y tests de cobertura}
+	\item{Correcta instalación del proyecto y sus dependencias}
+\end{itemize}
+
+Además, para la memoria escrita en LaTeX, teniendo en cuenta el texto \textbf{en inglés y en español}:
+\begin{itemize}
+	\item{Compilación del PDF sin errores.}
+	\item{Corrección ortográfica y gramatical.}
+	\item{Reglas de estilo en la redacción.}
+\end{itemize}
+
+
+\section{Resumen de la metodología}
+
+Una vez presentadas las herramientas y técnicas usadas es posible definir la metodología aplicada explicando el orden de los procesos.
+
+Se empieza la planificación realizando un \textbf{análisis de usuarios} para empatizar, se definen los requisitos del proyecto con \textbf{historias de usuario} (que pueden cambiar a lo largo del desarrollo) y creamos \textbf{hitos} para tener un horizonte de trabajo hacia los PMV, que pueden ser ampliados si tras ser cumplidos quedan historias de usuario sin resolver. Una vez finalizada esta planificación inicial, el desarrollo continúa con los siguientes pasos en bucle. 
+
+Se genera una ramificación del código principal en la que implementar una nueva funcionalidad, teniendo en cuenta los \textit{issues} que componen el hito en el que estemos trabajando.
+
+Se avanza en esta nueva rama con \textit{commits} (conjuntos de cambios confirmados). Cada uno de los \textit{commits} tiene asociado un \textbf{mensaje corto y conciso} que explica los cambios, con \textbf{referencia a un \textit{issue}} para saber que se pretende resolver y un \textbf{emoticono} (según el estándar definido en \url{https://gitmoji.dev/about}) que facilita identificar la intención del \textit{commit} con un vistazo.
+
+Una vez la nueva función está implementada y la rama pasa todos los \textbf{tests de integración continua} se hace una petición para integrar los cambios en la rama principal con un \textbf{\textit{Pull Request}} en GitHub. En este momento, los cambios son revisados por el resto del equipo (en este caso, normalmente, por el tutor) que puede ver fácilmente que se cumplen los tests y la intención de los cambios gracias a la historia lineal y descriptiva que se forma con los mensajes de los \textit{commits}.
+
+Los revisores inician una \textbf{conversación independiente por cada sugerencia} o pregunta realizada en la que se cita las líneas de texto afectadas, lo que permite mantener un diálogo ordenado y claro. Una vez todas las cuestiones que surgen en la revisión son resueltas, los cambios son integrados en la rama principal y automáticamente se cierran los \textit{issues} afectados.
+
+\section{Estimación de costes}
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{| l | l | r |}
+    		\hline
+        \textbf{Concepto} & \textbf{Detalle} & \textbf{Coste} \\
+        \hline
+        Material utilizado 	& PC - 950 € & - \\
+        						& Monitor 27' - 150€ & - \\
+        						& Otros periféricos - 100€ & - \\
+        						& Total amortizado a 5 años & 20€/mes \\
+        Personal contratado 	& Ingeniero de ML Junior	& 1500-2000€/mes \\
+        Recursos software 	& Software libre gratuito & 0€ \\
+        Recursos en la nube 	& GitHub plan gratuito & 0€ \\
+        \hline
+        Coste total 			& 3 meses de desarrollo & 4560€ - 6060€ \\
+        \hline
+	\end{tabular}
+	\caption{Costes estimados del proyecto.}
+\end{table}
