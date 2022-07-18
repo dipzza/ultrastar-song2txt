@@ -6,10 +6,17 @@ Vocaluxe
 Performous
 Yass
 Creator
+git
+issue
 issues
+commit
+commits
+pull
+request
 Song
 txt
 Merelo
 Guervós
 to
 AGPLv3
+PMV
