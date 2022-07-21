@@ -1,12 +1,13 @@
 \chapter{Planificación}
+\label{ch:planning}
 
 \section{Desarrollo ágil}
-
+\label{sec:agile}
 
 Con el objetivo de desarrollar software de calidad, flexible y adaptado a las necesidades de los clientes, se han seguido los principios del desarrollo ágil popularizados en 2001 por el manifiesto ágil \cite{beck2001agile}. Algunos de estos principios de acorde a los cuales se ha definido la metodología del desarrollo son:
 
 \begin{itemize}
-	\item{El desarrollo debe realizarse de forma \textbf{iterativa e incremental}, entregando temprano y continuamente cambios que añadan valor.}
+	\item{Nuestra mayor prioridad es satisfacer al cliente, para ello el desarrollo debe realizarse de forma \textbf{iterativa e incremental}, entregando temprano y continuamente cambios que añadan valor.}
 	\item{Hay que buscar \textbf{la excelencia técnica} y seguir buenas prácticas para garantizar la flexibilidad y comprensibilidad del proyecto.}
 	\item{El diseño es esencial, pero debe \textbf{evitarse la documentación excesiva}, ya que, conseguir código funcional lo antes posible es el mejor modo de confirmar que se entienden los requisitos del cliente.}
 	\item{Es necesario \textbf{revisar el trabajo frecuentemente}, para aprender a hacerlo de manera más eficiente, mantener la calidad del software al detectar fallos y adaptarlo a nuevos requisitos.}
@@ -16,7 +17,7 @@ Con el propósito de cumplir estos principios se han utilizado una serie de herr
 
 \section{Control de versiones}
 
-El uso de un sistema de control de versiones que lleve un registro de los cambios es fundamental en el desarrollo de software, ya que, permite coordinar el trabajo entre desarrolladores, deshacer cambios incorrectos, mantener distintas versiones del código y un largo etcétera de ventajas.
+El uso de un sistema de control de versiones que lleve un registro de los cambios es fundamental, ya que, permite coordinar el trabajo entre desarrolladores, deshacer cambios incorrectos, mantener distintas versiones del código y un largo etcétera de ventajas. Este tipo de sistemas ayudan a seguir un desarrollo iterativo en el que se compruebe el trabajo frecuentemente, tal y como indican los principios ágiles presentados en la sección \ref{sec:agile}. 
 
 Por este motivo, se ha elegido \textit{Git} como software de control de versiones y GitHub tanto para el alojamiento en un \href{https://github.com/dipzza/ultrastar-song2txt}{repositorio público} como plataforma de organización, colaboración y pruebas.
 
@@ -27,19 +28,11 @@ Para empatizar con los usuarios que acabarán usando el proyecto es necesario de
 Con esta intención, empleando la metodología de personas basadas en roles \cite{role-personas}, se han definido los siguientes roles que describen a un grupo de personas que realizan la misma función.
 
 \begin{enumerate}	
-	\item{Miembro del tribunal}
-	\begin{itemize}
-		\item{Misión: Evaluar los actos de defensa y los informes presentados en los trabajos de fin de grado, teniendo en cuenta si estas muestran que el estudiante ha desarrollado las técnicas y habilidades propias para obtener el título de grado.}
-		\item{Nivel de conocimiento: No se pueden hacer suposiciones sobre las habilidades de un miembro del tribunal, según su rama de conocimiento pueden tener un conocimiento altamente avanzado sobre los temas tratados o uno muy básico.}
-		\item{Contexto en el que realiza la función: La función es parte de su trabajo. Para la evaluación del acto de defensa prestan normalmente toda su atención, al leer la memoria también suele haber cierto nivel de concentración, aunque este puede ser menor al poder tener sobrecarga de obligaciones y estrés.}
-		\item{Productos de los que es usuario: Informe y el acto de defensa.}
-	\end{itemize}
-	
 	\item{Creador de canciones para videojuegos de karaoke}
 	\begin{itemize}
-		\item{Misión: Adaptar canciones para poder utilizarlas en los videojuegos de karaoke.}
-		\item{Nivel de conocimiento: Manejo medio de ordenadores, el sistema operativo que usan en estos puede ser \textit{Windows}, \textit{Linux} o \textit{macOS}. Importante diferenciar entre aquellos que tienen conocimientos musicales y los que no.}
-		\item{Contexto en el que realiza la función: Empleando su tiempo libre, por lo que pueden dejarla a medias o tener un tiempo limitado para hacerla.}
+		\item{Misión: Adaptar canciones para poder incluirlas en los videojuegos de karaoke.}
+		\item{Nivel de conocimiento: Manejo medio de ordenadores, el sistema operativo que emplean puede ser \textit{Windows}, \textit{Linux} o \textit{macOS}. Importante diferenciar entre aquellos que tienen conocimientos musicales y los que no.}
+		\item{Contexto en el que realiza la función: En su tiempo libre, por lo que pueden dejarla a medias o tener un tiempo limitado para hacerla.}
 		\item{Productos de los que es usuario: Las aplicaciones desarrolladas.}
 	\end{itemize}
 	
@@ -47,7 +40,7 @@ Con esta intención, empleando la metodología de personas basadas en roles \cit
 	\begin{itemize}
 		\item{Misión: Desarrollar con el código del proyecto, ya sea contribuyendo a este o reutilizando partes en otros proyectos.}
 		\item{Nivel de conocimiento: Conocimiento experto sobre herramientas de desarrollo y colaboración.}
-		\item{Contexto en el que realiza la función: Puede ser un su tiempo libre o como parte de sus tareas, pero suele ser con cierta dedicación sin hacer otras tareas a la vez.}
+		\item{Contexto en el que realiza la función: Puede ser en su tiempo libre o como parte de sus tareas, pero suele ser con cierta dedicación sin hacer otras tareas a la vez.}
 		\item{Producto de los que es usuario: La organización del proyecto, el código de este y la documentación.}
 	\end{itemize}
 \end{enumerate}
@@ -72,32 +65,19 @@ Como creador de canciones para karaoke quiero poder asignar los tonos de la canc
 
 Como creador de canciones para karaoke quiero evitar tener que buscar e introducir manualmente información sobre la canción.
 
-\subsubsection*{\href{https://github.com/dipzza/ultrastar-song2txt/issues/9}{[HU03] Miembro del tribunal - Criterios de Evaluación}}
 
-Como miembro del tribunal, me gustaría recibir una presentación y un informe en los que se pueda comprobar fácilmente que se han cumplido los criterios de evaluación. Para ello en estos debería reflejarse que el estudiante:
-\begin{itemize}
-	\item{Utiliza fuentes de información variadas, válidas y fiables y selecciona la relevante para el objetivo del trabajo.}
-    \item{Toma decisiones adecuadas al contexto y plantea soluciones sirviéndose del conocimiento adquirido.}
-    \item{Detecta y analiza oportunidades para hacer nuevas propuestas.}
-    \item{Propone soluciones adecuadas y justifica las decisiones tomadas para resolver problemas complejos.}
-    \item{Usa recursos formales e informales para documentar adecuadamente el proceso de desarrollo: concepción, planificación, análisis, diseño, implementación, pruebas, etc.}
-    \item{Muestra claridad y comprensión en la redacción, organizando la información adecuadamente y empleando los recursos adecuados para el discurso escrito.}
-    \item{Muestra claridad y comprensión en la expresión oral, organizando la información adecuadamente y utilizando los recursos adecuados para el discurso oral.}
-\end{itemize}
-
-
-\subsubsection*{\href{https://github.com/dipzza/ultrastar-song2txt/issues/10}{[HU04] Programador - Aplicación modular}}
+\subsubsection*{\href{https://github.com/dipzza/ultrastar-song2txt/issues/10}{[HU03] Programador - Aplicación modular}}
 
 Como programador querría que cada funcionalidad del proyecto fuera independiente, para poder reutilizar solo aquella que necesite al desarrollar otros programas.
 
-\subsubsection*{\href{https://github.com/dipzza/ultrastar-song2txt/issues/11}{[HU05] Programador - Estudio de prestaciones}}
+\subsubsection*{\href{https://github.com/dipzza/ultrastar-song2txt/issues/11}{[HU04] Programador - Estudio de prestaciones}}
 
 Como programador me gustaría poder ver pruebas detalladas sobre el rendimiento de las soluciones implementadas, para poder elegir con datos objetivos la solución más adecuada.
 
 
 \section{Hitos}
 
-Siguiendo los principios del desarrollo ágil el desarrollo debería realizarse de forma \textbf{incremental}, ya que de esta forma es posible presentar resultados frecuentemente y cambiar o adaptar los requerimientos.
+Siguiendo los principios del desarrollo ágil presentados en la sección \ref{sec:agile} el desarrollo debería realizarse de forma \textbf{incremental}, ya que de esta forma es posible presentar resultados frecuentemente y cambiar o adaptar los requerimientos.
 
 Para ello, se han definido hitos, que describen una serie de \textbf{productos mínimamente viables} (\textit{PMV}) que podrían entregarse. Cada uno es más complejo que el anterior incluyendo todo el desarrollo previo, tiene un criterio de aceptación y avanza hacia el cumplimiento de las historias de usuario.
 
@@ -135,7 +115,7 @@ Es necesario proveer un análisis de las prestaciones de las soluciones implemen
 
 \section{Control de la calidad}
 
-Con la intención de construir software de calidad desde el principio, cumplir los principios de buenas prácticas y que el software este preparado para entregar constantemente se ha aplicado \textbf{integración continua}, fusionando cambios a la línea principal de desarrollo solo una vez que estos pasen por test automatizados altamente estrictos.
+Con la intención de construir software de calidad desde el principio, preparado para entregar constantemente, y hacer cumplir la excelencia en el desarrollo del manifiesto ágil \cite{beck2001agile}, se ha aplicado \textbf{integración continua}, fusionando cambios a la línea principal de desarrollo solo una vez que estos pasen por test automatizados altamente estrictos.
 
 Al subir cualquier cambio a GitHub se ejecutan automáticamente las pruebas. Para el código se han configurado las siguientes comprobaciones:
 
@@ -176,16 +156,15 @@ Los revisores inician una \textbf{conversación independiente por cada sugerenci
     		\hline
         \textbf{Concepto} & \textbf{Detalle} & \textbf{Coste} \\
         \hline
-        Material utilizado 	& PC - 950 € & - \\
-        						& Monitor 27' - 150€ & - \\
-        						& Otros periféricos - 100€ & - \\
-        						& Total amortizado a 5 años & 20€/mes \\
-        Personal contratado 	& Ingeniero de ML Junior	& 1500-2000€/mes \\
-        Recursos software 	& Software libre gratuito & 0€ \\
-        Recursos en la nube 	& GitHub plan gratuito & 0€ \\
+        Material utilizado	& Ordenador, monitor y periféricos & Amortización* 312 €/año\\
+        Personal contratado 	& Ingeniero de ML Junior	& 1500-2000 €/mes \\
+        Recursos software 	& Software libre gratuito & 0 € \\
+        Recursos en la nube 	& GitHub plan gratuito & 0 € \\
         \hline
-        Coste total 			& 3 meses de desarrollo & 4560€ - 6060€ \\
+        Coste total 			& 3 meses de desarrollo & 4740 € - 6240 € \\
         \hline
 	\end{tabular}
 	\caption{Costes estimados del proyecto.}
 \end{table}
+
+*Amortización aplicando el coeficiente máximo de amortización lineal para el grupo ''Equipos para procesos de información'', que es del 25\% durante 4 años. Se incluye todo el equipo informático como conjunto operativo. Coste de compra total 1200 €, 950 € ordenador, 150 € monitor, 100 € periféricos. \cite{lis}.
