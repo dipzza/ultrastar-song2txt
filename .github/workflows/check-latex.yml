@@ -1,9 +1,5 @@
 name: Lint, spell & grammar check LaTeX document
-on:
-    push:
-    pull_request:
-        branches:
-            - master
+on: push
 jobs:
     check_latex:
         runs-on: ubuntu-latest

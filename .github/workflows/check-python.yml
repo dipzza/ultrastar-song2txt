@@ -1,9 +1,5 @@
 name: Python checks
-on:
-    push:
-    pull_request:
-        branches:
-            - master
+on: push
 jobs:
     check_python:
         runs-on: ubuntu-latest
