@@ -4,3 +4,86 @@ La implementación del software se ha dividido en hitos. Estos han sido definido
 y cada uno de ellos contiene un grupo de \textit{issues} que se corresponden con las distintas
 mejoras que se han ido incorporando al software a lo largo de su desarrollo.
 
+\section{Hito 0. Infraestructura y planificación}
+
+Se realizó la planificación inicial que se puede encontrar redactada en el capítulo \ref{ch:planning} y organizada en el \href{https://github.com/dipzza/ultrastar-song2txt}{repositorio} del proyecto. Además, se configuraron las siguientes herramientas.
+
+
+\subsection{Integración Continua}
+
+Se consideraron varios servicios que permiten \textbf{automatizar los procesos de integración continua} en la nube, todos ellos \textbf{con planes gratuitos para proyectos de código abierto} como el nuestro. Principalmente, se estudió usar Travis CI (con el que se tenía experiencia previa), Circle CI o GitHub Actions.
+
+GitHub Actions posee una integración excelente con GitHub, una configuración sencilla y permite reusar flujos de trabajo públicos (también llamados acciones, de los que hay disponibles una gran cantidad). La facilidad de uso y la rapidez con la que podemos definir los flujos de trabajo nos hacen decantarnos por \textbf{GitHub Actions en nuestro caso de uso}. Sin embargo, el resto de opciones podrían ser mejores para otros proyectos, debido a su flexibilidad al elegir plataforma para alojar el código, a las diferencias en funcionalidad o al precio de los planes de pago.
+
+Todos los procesos configurados se ejecutan cada vez que se introducen cambios en cualquier rama de desarrollo.
+
+\subsubsection{Flujos de trabajo para la memoria}
+
+\paragraph*{Compilación de archivos de LaTeX}
+\hfill{}
+\break
+La memoria del trabajo ha sido escrita con LaTeX, un sistema de composición de textos comúnmente usado en artículos académicos, tesis y libros técnicos por su calidad tipográfica y amplias capacidades.
+
+Es necesario compilar los archivos de LaTeX para obtener el documento final, pero esta puede fallar si la sintaxis es incorrecta. Por ello, se ha configurado un flujo de trabajo para \textbf{comprobar que la compilación se completa sin errores}. El flujo realiza un paso adicional si la rama principal de desarrollo está afectada (ya sea por introducir cambios o por hacerse un \textit{Pull Request} a esta) que \textbf{almacena el documento final generado}.
+
+\paragraph*{Corrección de la memoria}
+\hfill{}
+\break
+Para asegurar la corrección en la redacción de la memoria se ha utilizado la herramienta de software libre \href{https://github.com/sylvainhalle/textidote}{TeXtidote}. A diferencia de otras herramientas que solo revisan la ortografía (Aspell, Ispell...) se puede configurar para que \textbf{revise la ortografía, la gramática e incluso el estilo} tanto en la redacción como en la propia sintaxis de LaTeX.
+
+Con la intención de hacer las \textbf{comprobaciones más extensas y estrictas}, se ha definido un flujo de trabajo con todos los tests posibles de TeXtidote tanto para el \textbf{texto en Inglés como para el texto en Español}, introduciendo excepciones para algunas palabras y reglas para ignorar construcciones de LaTeX. Además de indicar el número de errores encontrados, el flujo \textbf{almacena un informe detallado} de los resultados en formato HTML.
+
+
+\subsubsection{Flujos de trabajo para el código}
+
+Para garantizar la calidad del código escrito en Python se ha elegido la herramienta Flake8 por razones similares a la elección de TeXtidote. Es fácil de configurar y exhaustiva, \textbf{verificando que no existan errores en el código, la adherencia a la guía de estilo \href{https://peps.python.org/pep-0008/}{PEP8} y que el código no sea complejo}.
+
+Además, se ha elegido pytest para escribir tests y la herramienta Coverage para garantizar que los tests cubren un alto porcentaje del código (Al menos el 70\%). Son herramientas simples y comúnmente usadas que cumplen nuestras necesidades.
+
+Se ha definido un flujo de trabajo que \textbf{revisa si el proyecto y sus dependencias se instalan correctamente en la versión estable más reciente de Python y que todos los tests unitarios, de cobertura y de Flake8 se completan sin errores}.
+
+\subsection{Gestión de dependencias y empaquetado}
+
+\textbf{Es necesario poder reproducir el entorno de desarrollo} con exactamente las mismas dependencias
+(librerías de códigos o paquetes que son reusados en un proyecto) para asegurarnos de que el producto desarrollado siempre funciona igual.
+
+Para ello, se ha escogido Poetry, una herramienta moderna para la gestión de dependencias y el empaquetado en Python. Con respecto a la forma clásica de empaquetado en Python que requiere múltiples herramientas (venv para entornos virtuales, pip para dependencias, setuptools para construir y distribuir los paquetes) \textbf{Poetry agrupa todas las funciones en una sola herramienta más sencilla} que requiere menor interacción manual y que utiliza un solo archivo para toda la configuración. Se ha usado Poetry durante el desarrollo para:
+
+\begin{itemize}
+	\item{\textbf{Crear y usar entornos virtuales} (entornos separados del resto del sistema) integrados de modo que al usar Poetry en la carpeta del proyecto \textbf{automáticamente se trabaja dentro del entorno}.}
+	\item{\textbf{Añadir dependencias} del proyecto o de desarrollo descargando e instalándolas tras comprobar que son compatibles con el resto del entorno. En el archivo \texttt{poetry.lock} se almacenan las versiones de las dependencias para garantizar que todo el mundo tenga las mismas, normalmente compartiendo el archivo con un sistema de control de versiones.}
+	\item{\textbf{Generar paquetes y publicarlos} a repositorios públicos o privados.}
+\end{itemize}
+
+La principal desventaja de Poetry es que no está tan extendido, suponiendo para un usuario que esté acostumbrado a otras herramientas tener que instalar y aprender una nueva. Por ello, \textbf{se provee en el repositorio el archivo \texttt{requirements.txt}} que especifica las mismas dependencias que el archivo \texttt{poetry.lock} pero en un formato apto \textbf{para poder instalar las dependencias con otras herramientas}.
+
+
+\subsection{Gestor de tareas}
+
+Los gestores de tareas son una importante herramienta para construir software de calidad porque permiten \textbf{automatizar y hacer reproducibles las tareas del proyecto}. Como gestor de tareas principal \textbf{se ha elegido make, por dos razones}:
+
+\begin{enumerate}
+
+	\item{Es una herramienta común, \textbf{instalada por defecto} en la mayoría de distribuciones de Linux, lo que hace su uso cómodo para desarrolladores con acceso a un entorno de este tipo.}
+
+	\item{La posibilidad de lanzar órdenes en el intérprete de comandos directamente otorga \textbf{versatilidad para realizar cualquier tipo de tarea}. Esto ha permitido definir tareas para compilación, comprobación, instalación, empaquetado y distribución \textbf{asociadas al código o a los archivos de LaTeX}. Para ello se ha creado un \textit{Makefile} (archivo que define como ejecutar las tareas) en la carpeta de documentación y otro en la carpeta del proyecto.}
+
+\end{enumerate}
+
+
+Sin embargo, el precio a pagar por la versatilidad es una mayor dificultad para utilizar el gestor en plataformas diferentes a Linux. Como opción de respaldo multiplataforma, con Poetry se pueden para ejecutar las tareas pertinentes al código siguiendo la documentación.
+
+
+\subsection{Contribuyendo de vuelta a proyectos libres}
+
+Una de las muchas \textbf{ventajas del software libre} es que puedes \textbf{contribuir a solucionar los problemas} que encuentres tu mismo. Durante el desarrollo de este hito se hicieron algunas contribuciones pequeñas.
+
+\begin{enumerate}
+	\item{Inicialmente, los informes sobre la corrección de la memoria contenían falsos positivos, esto se debía a una \textbf{dependencia desactualizada en una acción pública}. Se presentó un \textit{Pull Request} arreglando el problema que fue integrado el mismo día por el mantenedor del repositorio original. \href{https://github.com/ChiefGokhlayeh/textidote-action/pull/33}{Enlace al \textit{Pull Request}}.}
+	
+	\item{Con TeXtidote fue necesario aplicar una solución enrevesada y poco elegante para poder revisar ambos idiomas empleados en la memoria. Con la intención de mejorar este caso de uso se propuso una solución para el \textbf{soporte de múltiples lenguajes} en un \textit{Issue}, que \textbf{ha sido añadido como parte del siguiente hito del proyecto}. \href{https://github.com/sylvainhalle/textidote/issues/203}{Enlace al Issue.}}
+	
+	\item{Finalmente, se hizo un Pull Request para \textbf{corregir un error de sintaxis} en la \textbf{plantilla de LaTeX} empleada. \href{https://github.com/JJ/plantilla-TFG-ETSIIT/pull/7}{Enlace al \textit{Pull Request}}.}
+\end{enumerate}
+
+\section{Hito 1}

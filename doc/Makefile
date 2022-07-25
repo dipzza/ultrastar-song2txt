@@ -1,6 +1,6 @@
 DOC := proyecto.tex
 
-spellargs := --ignore sh:seclen,sh:stacked --remove-macros tableofcontents,listoffigures,listoftables,begin,centeroffset,oddsidemargin,evensidemargin,centering,bfseries,end,cleardoublepage,setlength
+spellargs := --ignore sh:seclen,sh:stacked --remove-macros tableofcontents,listoffigures,listoftables,begin,centeroffset,oddsidemargin,evensidemargin,centering,bfseries,end,cleardoublepage,setlength,texttt
 
 all: doc
 
