@@ -1,12 +1,13 @@
 [tool.poetry]
 name = "song2txt"
 version = "0.1.0"
-description = "Command-line utility to make a .txt ultrastar file from a song"
+description = "Tools to make a .txt ultrastar file from a song"
 authors = ["dipzza <dipzza@disroot.org>"]
 license = "AGPLv3"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">=3.7, <3.11"
+uspitch = {path = "./song2txt/uspitch", develop=true}
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.2"
