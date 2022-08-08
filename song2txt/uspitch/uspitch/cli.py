@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 import crepe
 import numpy as np
 
-from .txt_parser import Parser
+import txt_parser as txt
 from .audio_utils import open_audio, calculate_pitches
 
 
@@ -27,20 +27,19 @@ def main():
                      help='step size in ms for pitch estimation. Default: 10')
     args = par.parse_args()
 
-    txt_parser = Parser()
-    txt_parser.read_file(args.filepath)
-    song_path = os.path.join(os.path.dirname(args.filepath), txt_parser.mp3)
+    text, metadata, note_timing = txt.read_file(args.filepath)
+    song_path = os.path.join(os.path.dirname(args.filepath), metadata['MP3'])
     samples, sr = open_audio(song_path)
 
     _, freq, conf, _ = crepe.predict(samples, sr,
                                      model_capacity=args.model_size,
                                      viterbi=args.viterbi,
                                      step_size=args.step_size)
-    intervals = np.int_(txt_parser.notes_intervals() / args.step_size)
+    intervals = np.int_(txt.beat_to_ms(metadata, note_timing) / args.step_size)
     pitches = calculate_pitches(freq, conf, intervals, args.confidence)
 
     if args.output is None:
         root, extension = os.path.splitext(args.filepath)
-        txt_parser.write_file(root + '_pitched' + extension, pitches)
+        txt.write_file(root + '_pitched' + extension, text, pitches)
     else:
-        txt_parser.write_file(args.output, pitches)
+        txt.write_file(args.output, text, pitches)
