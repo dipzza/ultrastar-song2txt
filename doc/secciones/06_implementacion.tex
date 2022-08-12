@@ -11,67 +11,74 @@ Se realizó la planificación inicial que se puede encontrar redactada en el cap
 
 \subsection{Integración Continua}
 
-Se consideraron varios servicios que permiten \textbf{automatizar los procesos de integración continua} en la nube, todos ellos \textbf{con planes gratuitos para proyectos de código abierto} como el nuestro. Principalmente, se estudió usar Travis CI (con el que se tenía experiencia previa), Circle CI o GitHub Actions.
+Se consideraron varios servicios que permiten \textbf{automatizar los procesos de integración continua} en la nube, con la condición de que dispongan de planes gratuitos para proyectos de código abierto y buscando el servicio más sencillo de integrar con el repositorio del proyecto en GitHub.
 
-GitHub Actions posee una integración excelente con GitHub, una configuración sencilla y permite reusar flujos de trabajo públicos (también llamados acciones, de los que hay disponibles una gran cantidad). La facilidad de uso y la rapidez con la que podemos definir los flujos de trabajo nos hacen decantarnos por \textbf{GitHub Actions en nuestro caso de uso}. Sin embargo, el resto de opciones podrían ser mejores para otros proyectos, debido a su flexibilidad al elegir plataforma para alojar el código, a las diferencias en funcionalidad o al precio de los planes de pago.
+Tanto Travis CI,  Circle CI y GitHub Actions ofrecen planes gratuitos. Se considera que GitHub Actions es el servicio que mejor cumple las características deseadas, debido a su integración dentro de la propia interfaz de GitHub, la facilidad de configuración y la posibilidad de reusar flujos de trabajo públicos (también llamados acciones). Los otros servicios poseen ventajas, como soporte para otras plataformas en las que alojar el código o diferencias en los precios de los planes de pago, pero para este proyecto se consideran irrelevantes.
 
-Todos los procesos configurados se ejecutan cada vez que se introducen cambios en cualquier rama de desarrollo.
+Utilizando el servicio escogido se han configurado una serie de flujos de trabajo que son ejecutados cada vez que se introducen cambios en cualquier rama de desarrollo.
 
-\subsubsection{Flujos de trabajo para la memoria}
+\subsubsection{Memoria}
 
-\paragraph*{Compilación de archivos de LaTeX}
-\hfill{}
-\break
+\paragraph*{Compilación de archivos de LaTeX.}
+
 La memoria del trabajo ha sido escrita con LaTeX, un sistema de composición de textos comúnmente usado en artículos académicos, tesis y libros técnicos por su calidad tipográfica y amplias capacidades.
 
-Es necesario compilar los archivos de LaTeX para obtener el documento final, pero esta puede fallar si la sintaxis es incorrecta. Por ello, se ha configurado un flujo de trabajo para \textbf{comprobar que la compilación se completa sin errores}. El flujo realiza un paso adicional si la rama principal de desarrollo está afectada (ya sea por introducir cambios o por hacerse un \textit{Pull Request} a esta) que \textbf{almacena el documento final generado}.
+Es necesario compilar los archivos de LaTeX para obtener el documento final. Por ello, se ha configurado un flujo de trabajo para \textbf{comprobar que la compilación se completa sin errores}. El flujo realiza un paso adicional si la rama principal de desarrollo está afectada (ya sea por introducir cambios o por hacerse un \textit{pull request} a esta) que \textbf{almacena el documento final generado}.
 
-\paragraph*{Corrección de la memoria}
-\hfill{}
-\break
-Para asegurar la corrección en la redacción de la memoria se ha utilizado la herramienta de software libre \href{https://github.com/sylvainhalle/textidote}{TeXtidote}. A diferencia de otras herramientas que solo revisan la ortografía (Aspell, Ispell...) se puede configurar para que \textbf{revise la ortografía, la gramática e incluso el estilo} tanto en la redacción como en la propia sintaxis de LaTeX.
+\paragraph*{Corrección de la memoria.}
+
+Para asegurar una correcta redacción de la memoria se ha utilizado la herramienta de software libre \href{https://github.com/sylvainhalle/textidote}{TeXtidote}. A diferencia de otras herramientas que solo revisan la ortografía (Aspell, Ispell...) se puede configurar para que \textbf{revise la ortografía, la gramática e incluso el estilo} tanto en la redacción como en la propia sintaxis de LaTeX.
 
 Con la intención de hacer las \textbf{comprobaciones más extensas y estrictas}, se ha definido un flujo de trabajo con todos los tests posibles de TeXtidote tanto para el \textbf{texto en Inglés como para el texto en Español}, introduciendo excepciones para algunas palabras y reglas para ignorar construcciones de LaTeX. Además de indicar el número de errores encontrados, el flujo \textbf{almacena un informe detallado} de los resultados en formato HTML.
 
 
-\subsubsection{Flujos de trabajo para el código}
+\subsubsection{Código}
 
-Para garantizar la calidad del código escrito en Python se ha elegido la herramienta Flake8 por razones similares a la elección de TeXtidote. Es fácil de configurar y exhaustiva, \textbf{verificando que no existan errores en el código, la adherencia a la guía de estilo \href{https://peps.python.org/pep-0008/}{PEP8} y que el código no sea complejo}.
+\paragraph*{Análisis estático.}
 
-Además, se ha elegido pytest para escribir tests y la herramienta Coverage para garantizar que los tests cubren un alto porcentaje del código (Al menos el 70\%). Son herramientas simples y comúnmente usadas que cumplen nuestras necesidades.
+Configurar un \textit{linter} (herramienta que lleva a cabo un análisis estático del código para detectar errores) es un paso básico para garantizar la calidad del código.
 
-Se ha definido un flujo de trabajo que \textbf{revisa si el proyecto y sus dependencias se instalan correctamente en la versión estable más reciente de Python y que todos los tests unitarios, de cobertura y de Flake8 se completan sin errores}.
+Se busca un \textit{linter} fácil de configurar, que detecte errores de programación y compruebe la adherencia a la guía de estilo \href{https://peps.python.org/pep-0008/}{PEP8}.
+
+Existen multitud de opciones que proveen estas funcionalidades, o parte de ellas, para código escrito en Python (pycodestyle, pylint, pyflakes, flake8,...). Se ha escogido flake8 porque además de agrupar la funcionalidad deseada al detectar errores de programación y estilísticos, incluye comprobaciones sobre la complejidad del código y es rápida.
+
+\paragraph*{Test unitarios y de integración.}
+
+Es necesario un marco de pruebas para escribir y automatizar la ejecución de test unitarios (testean que cada parte de la aplicación funcione como se espera de forma aislada) y test de integración (testean que distintas partes de la aplicación trabajando juntas funcionan como se espera).
+
+Se han considerado pytest y unittest como marcos de pruebas, ambas opciones satisfacen las características requeridas.
+
+Finalmente, se ha elegido pytest debido a que posee una sintaxis más simple, lo que ayuda a la comprensión de los test que se definan, y, a diferencia de unittest, el nombre de sus funciones respeta la guía de estilo PEP8. Además, cuenta con un complemento para revisar la cobertura del código que proporcionan los test.
+
+\paragraph*{Flujo configurado.}
+
+Se ha definido un flujo de trabajo que verifica que el proyecto y sus dependencias se instalan correctamente, que las comprobaciones del \textit{linter} no reportan ningún error y que los test escritos se ejecutan sin errores cubriendo un porcentaje significativo del código (al menos el 85\%).
 
 \subsection{Gestión de dependencias y empaquetado}
 
-\textbf{Es necesario poder reproducir el entorno de desarrollo} con exactamente las mismas dependencias
-(librerías de códigos o paquetes que son reusados en un proyecto) para asegurarnos de que el producto desarrollado siempre funciona igual.
+Un \textbf{entorno de desarrollo reproducible} que defina sus dependencias
+(librerías de códigos o paquetes que son reusados en un proyecto) es fundamental para asegurarnos de que los programas funcionan igual independientemente del equipo en el que se ejecuten.
 
-Para ello, se ha escogido Poetry, una herramienta moderna para la gestión de dependencias y el empaquetado en Python. Con respecto a la forma clásica de empaquetado en Python que requiere múltiples herramientas (venv para entornos virtuales, pip para dependencias, setuptools para construir y distribuir los paquetes) \textbf{Poetry agrupa todas las funciones en una sola herramienta más sencilla} que requiere menor interacción manual y que utiliza un solo archivo para toda la configuración. Se ha usado Poetry durante el desarrollo para:
+Para ello se busca una herramienta para la gestión de \textbf{entornos virtuales} (entornos aislados que no dependen del resto del sistema), \textbf{dependencias}, el \textbf{empaquetado} y \textbf{publicación}.
 
-\begin{itemize}
-	\item{\textbf{Crear y usar entornos virtuales} (entornos separados del resto del sistema) integrados de modo que al usar Poetry en la carpeta del proyecto \textbf{automáticamente se trabaja dentro del entorno}.}
-	\item{\textbf{Añadir dependencias} del proyecto o de desarrollo descargando e instalándolas tras comprobar que son compatibles con el resto del entorno. En el archivo \texttt{poetry.lock} se almacenan las versiones de las dependencias para garantizar que todo el mundo tenga las mismas, normalmente compartiendo el archivo con un sistema de control de versiones.}
-	\item{\textbf{Generar paquetes y publicarlos} a repositorios públicos o privados.}
-\end{itemize}
+Además de proporcionar esta funcionalidad se espera que la herramienta sea simple, rápida y use el formato de archivo de configuración TOML, establecido como estándar en las propuestas de mejora de Python \href{https://peps.python.org/pep-0517/}{PEP517}, \href{https://peps.python.org/pep-0518/}{PEP518} y \href{https://peps.python.org/pep-0621/}{PEP621}.
 
-La principal desventaja de Poetry es que no está tan extendido, suponiendo para un usuario que esté acostumbrado a otras herramientas tener que instalar y aprender una nueva. Por ello, \textbf{se provee en el repositorio el archivo \texttt{requirements.txt}} que especifica las mismas dependencias que el archivo \texttt{poetry.lock} pero en un formato apto \textbf{para poder instalar las dependencias con otras herramientas}.
+Existen multitud de opciones (pip, venv, pipenv, setuptools, distutils, Poetry...), pipenv posee las características esperadas, pero solo para la gestión de entornos virtuales y dependencias, la única que agrupa toda la funcionalidad necesaria y utiliza un único fichero TOML para toda la configuración es \textbf{Poetry} y, por lo tanto, esta es la herramienta que se ha utilizado.
+
+La principal desventaja de Poetry es que no está tan extendida, suponiendo para un usuario que esté acostumbrado a otras herramientas tener que instalar y aprender una nueva. Para paliar este inconveniente \textbf{se provee en el repositorio el archivo \texttt{requirements.txt}} que especifica las mismas dependencias que el archivo \texttt{poetry.lock} de Poetry en un formato apto \textbf{para poder instalar las dependencias con otras herramientas}.
 
 
 \subsection{Gestor de tareas}
 
-Los gestores de tareas son una importante herramienta para construir software de calidad porque permiten \textbf{automatizar y hacer reproducibles las tareas del proyecto}. Como gestor de tareas principal \textbf{se ha elegido make, por dos razones}:
+Los gestores de tareas son herramientas útiles para construir software de calidad porque permiten \textbf{automatizar y hacer reproducibles las tareas del desarrollo}.  
 
-\begin{enumerate}
+La cualidad principal que se desea en un gestor de tareas para este proyecto es \textbf{versatilidad}, es decir, que permita \textbf{lanzar órdenes en el intérprete de comandos} directamente.  Esto nos permitiría definir tareas no solo para la construcción de la aplicación, sino también para una variedad de procesos que se llevan a cabo en el desarrollo y que dependen de otros programas.
 
-	\item{Es una herramienta común, \textbf{instalada por defecto} en la mayoría de distribuciones de Linux, lo que hace su uso cómodo para desarrolladores con acceso a un entorno de este tipo.}
+Hay una gran variedad de gestores de tareas que satisfacen este requisito y, por lo tanto, serían opciones viables (make, Task, taskipy, mmake, poethepoet...).
 
-	\item{La posibilidad de lanzar órdenes en el intérprete de comandos directamente otorga \textbf{versatilidad para realizar cualquier tipo de tarea}. Esto ha permitido definir tareas para compilación, comprobación, instalación, empaquetado y distribución \textbf{asociadas al código o a los archivos de LaTeX}. Para ello se ha creado un \textit{Makefile} (archivo que define como ejecutar las tareas) en la carpeta de documentación y otro en la carpeta del proyecto.}
+No es necesaria la funcionalidad extra que proveen algunas de las herramientas, por ello, buscando la comodidad de los desarrolladores, \textbf{se ha escogido la herramienta más conocida}, instalada por defecto en la mayoría de distribuciones de Linux,  \textbf{make}.
 
-\end{enumerate}
-
-
-Sin embargo, el precio a pagar por la versatilidad es una mayor dificultad para utilizar el gestor en plataformas diferentes a Linux. Como opción de respaldo multiplataforma, con Poetry se pueden para ejecutar las tareas pertinentes al código siguiendo la documentación.
+Se ha creado un \textit{Makefile} (archivo de texto donde se definen las tareas ejecutables)  en la carpeta del proyecto con la \textbf{definición de tareas} para la realización de test, la instalación, el empaquetado y la distribución \textbf{del código}, y otro archivo en la carpeta de la documentación para la compilación y la realización de test sobre los archivos \textbf{de LaTeX}.
 
 
 \subsection{Contribuyendo de vuelta a proyectos libres}
