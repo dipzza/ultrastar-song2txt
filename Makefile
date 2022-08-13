@@ -1,11 +1,11 @@
 build:
-    poetry build
+	poetry build
 
 install:
-    poetry install
+	poetry install
 
 publish:
-    poetry publish
+	poetry publish
 
 test:
 	poetry run python -m pytest
