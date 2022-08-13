@@ -6,7 +6,8 @@ from charset_normalizer import from_path
 
 def read_file(path):
     try:
-        text = str(from_path(path).best())
+        cp_list = ['utf-8', 'windows-1252', 'ISO-8859-1']
+        text = str(from_path(path, cp_isolation=cp_list).best())
         metadata = {}
         notes_timing = []
 
