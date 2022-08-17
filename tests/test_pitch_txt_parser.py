@@ -1,6 +1,6 @@
 from unittest import mock
 
-import song2txt.uspitch.uspitch.txt_parser as parser
+import song2txt.txt_parser.txt_parser as parser
 
 import pytest
 import numpy as np

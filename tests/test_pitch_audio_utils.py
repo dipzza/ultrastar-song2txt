@@ -1,6 +1,6 @@
 from unittest import mock
 
-import song2txt.uspitch.uspitch.audio_utils as audio
+import song2txt.pitch_utils as audio
 
 import numpy as np
 
@@ -11,7 +11,7 @@ def test_open_audio_mono():
     m_audio.get_array_of_samples.return_value = [1, 1]
     m_audio.frame_rate = 48000
 
-    with mock.patch('song2txt.uspitch.uspitch.audio_utils.AudioSegment') \
+    with mock.patch('song2txt.pitch_utils.AudioSegment') \
             as AudioSegmentMock:
         AudioSegmentMock.from_file.return_value = m_audio
         samples, sample_rate = audio.open_audio('song.wav')
@@ -26,7 +26,7 @@ def test_open_audio_stereo():
     m_audio.get_array_of_samples.return_value = [1, 2, 1, 2]
     m_audio.frame_rate = 48000
 
-    with mock.patch('song2txt.uspitch.uspitch.audio_utils.AudioSegment') \
+    with mock.patch('song2txt.pitch_utils.AudioSegment') \
             as AudioSegmentMock:
         AudioSegmentMock.from_file.return_value = m_audio
         samples, sample_rate = audio.open_audio('song.wav')

@@ -7,7 +7,10 @@ license = "AGPLv3"
 
 [tool.poetry.dependencies]
 python = ">=3.7, <3.11"
-uspitch = {path = "./song2txt/uspitch", develop=true}
+charset-normalizer = "^2.1.0"
+crepe = "^0.0.12"
+pydub = "^0.25.1"
+tensorflow = "^2.9.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.2"
@@ -19,4 +22,4 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-uspitch = 'song2txt.uspitch.uspitch.cli:main'
+uspitch = 'song2txt.pitch_cli:main'
