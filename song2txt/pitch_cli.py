@@ -4,8 +4,8 @@ from argparse import ArgumentParser
 import crepe
 import numpy as np
 
-import uspitch.txt_parser as txt
-from .audio_utils import open_audio, calculate_pitches
+import song2txt.txt_parser.txt_parser as txt
+from .pitch_utils import open_audio, calculate_pitches
 
 
 def main():
