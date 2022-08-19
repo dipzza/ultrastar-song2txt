@@ -1,3 +1,3 @@
-from .pitch_cli import main
+from song2txt.pitch_cli import main
 
 main()
