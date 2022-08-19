@@ -1,11 +1,14 @@
-import os
 from argparse import ArgumentParser
+from pathlib import Path
 
 import crepe
 import numpy as np
+import librosa as lbr
 
-import song2txt.txt_parser.txt_parser as txt
-from .pitch_utils import open_audio, calculate_pitches
+import song2txt.txt_parser.txt_parser as txt_parser
+from song2txt.pitch_utils import notes_to_array, beat_to_ms, calculate_pitches
+
+DEF_SUFFIX = '_pitched'
 
 
 def main():
@@ -17,8 +20,8 @@ def main():
                      'uses same directory as filepath by default.')
     par.add_argument('--confidence', '-c', type=float, default=0.7,
                      help='minimum confidence to use a pitch estimate')
-    par.add_argument('--model-size', '-m', default='full',
-                     choices=['tiny', 'small', 'medium', 'large', 'full'],
+    par.add_argument('--model-size', '-m', default='tiny',
+                     choices=['tiny', 'small', 'medium', 'large', 'tiny'],
                      help='model size for pitch estimation; smaller models '
                           'are faster but may be less accurate. Default: full')
     par.add_argument('--viterbi', '-v', action='store_true',
@@ -27,19 +30,26 @@ def main():
                      help='step size in ms for pitch estimation. Default: 10')
     args = par.parse_args()
 
-    text, metadata, note_timing = txt.read_file(args.filepath)
-    song_path = os.path.join(os.path.dirname(args.filepath), metadata['MP3'])
-    samples, sr = open_audio(song_path)
+    txt_path = Path(args.filepath)
+    us_txt = txt_parser.read_file(txt_path)
+    samples, sr = lbr.load(txt_path.parent / us_txt.metadata.mp3, sr=None)
 
     _, freq, conf, _ = crepe.predict(samples, sr,
                                      model_capacity=args.model_size,
                                      viterbi=args.viterbi,
                                      step_size=args.step_size)
-    intervals = np.int_(txt.beat_to_ms(metadata, note_timing) / args.step_size)
+
+    notes = notes_to_array(us_txt.notes)
+    notes_ms = beat_to_ms(notes, us_txt.metadata.bpm, us_txt.metadata.gap)
+    intervals = np.int_(notes_ms[:, :2] / args.step_size)
     pitches = calculate_pitches(freq, conf, intervals, args.confidence)
 
+    for note, pitch in zip(us_txt.notes, pitches):
+        note.pitch = pitch
+
     if args.output is None:
-        root, extension = os.path.splitext(args.filepath)
-        txt.write_file(root + '_pitched' + extension, text, pitches)
+        output_path = txt_path.with_stem(txt_path.stem + DEF_SUFFIX)
+        txt_parser.write_file(us_txt, output_path)
     else:
-        txt.write_file(args.output, text, pitches)
+        output_path = Path(args.output)
+        txt_parser.write_file(us_txt, output_path)
