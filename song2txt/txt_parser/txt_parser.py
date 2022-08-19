@@ -1,105 +1,86 @@
-import sys
+import re
+from os import PathLike
 
-import numpy as np
 from charset_normalizer import from_path
 
+from .ultrastar_txt import UltraStarTXT
+from .song_line import Note, PlayerChange, PhraseEnd, NoteType, SongLine
+from .metadata import MetaData
 
-def read_file(path):
-    try:
-        cp_list = ['utf-8', 'windows-1252', 'ISO-8859-1']
-        text = str(from_path(path, cp_isolation=cp_list).best())
-        metadata = {}
-        notes_timing = []
-
-        for line in text.splitlines():
-            if line.startswith((':', '*')):
-                notes_timing.append(line.split()[1:3])
-            elif line.startswith('#'):
-                key, value = line.lstrip('#').split(':')
-                metadata[key] = value
-
-        return text, metadata, notes_timing
-    except FileNotFoundError:
-        print('File does not exist: ' + path)
-        sys.exit(1)
+REG_PLAYER = r'P(\d)'
+REG_NOTE = r'([:*FRG]) (\d+) (\d+) (\d+) *(.*)'
+REG_PHRASE_END = r'- (\d+) ?(\d+)?'
+REG_META = r'# *(\S*) *: *(.*) *'
+FILE_END = 'E'
 
 
-def write_file(path, text, new_pitches=None, new_metadata=None):
-    try:
-        with open(path, 'w', encoding='utf-8') as f:
-            if new_pitches is not None:
-                text = update_pitches(text, new_pitches)
-            if new_metadata is not None:
-                text = update_metadata(text, new_metadata)
-            f.write(text)
-    except PermissionError:
-        print('Permission denied: ' + path)
-        sys.exit(1)
-    except FileNotFoundError:
-        print('Directory does not exist: ' + path)
-        sys.exit(1)
+def read_file(path: PathLike) -> UltraStarTXT:
+    cp_list = ['utf-8', 'windows-1252', 'ISO-8859-1']
+    text = str(from_path(path, cp_isolation=cp_list).best())
+
+    return parse_text(text)
 
 
-def update_pitches(text, new_pitches):
-    lines = text.splitlines(True)
-    pitch_iter = iter(new_pitches)
-
-    for index, line in enumerate(lines):
-        if line.startswith((':', '*')):
-            line = line.split(' ')
-            line[3] = str(next(pitch_iter))
-            lines[index] = ' '.join(line)
-
-    return ''.join(lines)
+def write_file(us_txt: UltraStarTXT, path: PathLike):
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write(str(us_txt))
 
 
-def update_metadata(text, new_metadata):
-    lines = text.splitlines(True)
-    metadata_end = 0
+def parse_text(text: str) -> UltraStarTXT:
+    metadata = MetaData()
+    song_lines = []
 
-    # Removes old metadata
-    for index, line in enumerate(lines):
-        if not line.startswith('#'):
-            metadata_end = index
-            break
+    lines = text.splitlines()
+    is_metadata = True
+    i = 0
+    while i < len(lines) and is_metadata:
+        parsed = parse_metadata_line(lines[i])
+        if isinstance(parsed, tuple):
+            metadata.add(*parsed)
+            i += 1
+        else:
+            is_metadata = False
 
-    lines = lines[metadata_end:]
+    while i < len(lines) and not lines[i].startswith(FILE_END):
+        song_line = parse_song_line(lines[i])
+        if isinstance(song_line, SongLine):
+            song_lines.append(song_line)
+        else:
+            raise Exception(f'Incorrect format in line {i}: {lines[i]}')
+        i += 1
 
-    # Adds new metadata
-    for index, item in enumerate(new_metadata.items()):
-        key, value = item
-        line = '#' + key + ':' + value + '\n'
-        lines.insert(index, line)
-
-    return ''.join(lines)
-
-
-def beat_to_ms(metadata, intervals):
-    bpm, gap = str_to_float(metadata['BPM'], metadata['GAP'])
-    beat_length = 15000 / bpm
-
-    timing = np.array(intervals, dtype=float)
-    timing[:, 0] = timing[:, 0] * beat_length + gap
-    timing[:, 1] = timing[:, 1] * beat_length + timing[:, 0]
-
-    return timing
+    return UltraStarTXT(metadata, song_lines)
 
 
-def ms_to_beat(metadata, intervals):
-    bpm, gap = str_to_float(metadata['BPM'], metadata['GAP'])
-    beat_length = 15000 / bpm
+def parse_song_line(line: str):
+    parsed = None
+    match_player = re.compile(REG_PLAYER).match(line)
+    match_note = re.compile(REG_NOTE).match(line)
+    match_phrase = re.compile(REG_PHRASE_END).match(line)
 
-    timing = np.array(intervals, dtype=float)
-    timing[:, 1] = (timing[:, 1] - timing[:, 0]) / beat_length
-    timing[:, 0] = (timing[:, 0] - gap) / beat_length
+    if match_player:
+        parsed = PlayerChange(int(match_player.group(1)))
+    elif match_note:
+        note_type = NoteType(match_note.group(1))
+        start_beat = int(match_note.group(2))
+        length = int(match_note.group(3))
+        pitch = int(match_note.group(4))
+        text = match_note.group(5)
+        parsed = Note(note_type, start_beat, length, pitch, text)
+    elif match_phrase:
+        start_beat = int(match_phrase.group(1))
+        end_beat = match_phrase.group(2)
+        if end_beat is None:
+            parsed = PhraseEnd(start_beat)
+        else:
+            parsed = PhraseEnd(start_beat, int(end_beat))
 
-    return timing
+    return parsed
 
 
-def str_to_float(*values: str):
-    sanitized = []
-
-    for value in values:
-        sanitized.append(float(value.replace(',', '.')))
-
-    return sanitized
+def parse_metadata_line(line: str):
+    match = re.compile(REG_META).match(line)
+    if match:
+        return match.group(1), match.group(2)
+    else:
+        return None
