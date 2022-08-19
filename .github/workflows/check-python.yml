@@ -14,6 +14,8 @@ jobs:
               run: pip install poetry
             - name: Install poetry dependencies
               run: poetry install
+            - name: Install sndfile
+              run: sudo apt-get install libsndfile1
             - name: Run unit tests
               run: make test
             - name: Run coverage test
