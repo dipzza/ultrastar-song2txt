@@ -49,3 +49,7 @@ Chardet
 cChardet
 Charset
 Normalizer
+SoundFile
+Pydub
+audioread
+librosa
