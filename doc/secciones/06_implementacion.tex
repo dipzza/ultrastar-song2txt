@@ -99,6 +99,8 @@ Una de las muchas \textbf{ventajas del software libre} es que puedes \textbf{con
 
 \section{Hito 1. Estimación de tonos}
 
+Se ha implementado una aplicación para asignar los tonos de forma automatizada en el proceso de creación de una canción para videojuegos de karaoke. Al completar este hito se avanza en la satisfacción de los requisitos definidos en la historia de usuario de la sección \ref{sec:hu1}.
+
 \subsection{Estructura del proyecto}
 Para organizar los archivos de la aplicación se deseaba una estructura simple, fácil para trabajar con ella y de entender.  La estructura "plana" o "\textit{adhoc}"  ejemplificada en la figura \ref{fig:layout1} usa una cantidad reducida de carpetas y profundidad que aun así organiza los archivos de forma lógica.  Por ello, se han organizado los archivos según esta estructura  que cumple los requisitos y es reconocida sin configuración adicional por herramientas usadas en el proyecto como Poetry (sección \ref{sec:poetry}) o Pytest (sección \ref{sec:tests}).
 
@@ -107,6 +109,16 @@ Para organizar los archivos de la aplicación se deseaba una estructura simple, 
 	\includegraphics[width=0.5\linewidth]{logos/layout.png}
 	\caption{Ejemplo de estructura plana}
 	\label{fig:layout1}
+\end{figure}
+
+
+Los paquetes implementados, sus módulos y la relación de uso entre ellos pueden observarse en el diagrama de la figura \ref{fig:modules1}.
+
+
+\begin{figure}[h!]
+	\includegraphics[width=\linewidth]{logos/packages.png}
+	\caption{Diagrama de paquetes}
+	\label{fig:modules1}
 \end{figure}
 
 
@@ -182,3 +194,80 @@ Existen varias librerías de Python mantenidas activamente que permiten cargar a
 La opción elegida es \textbf{librosa} porque satisface la compatibilidad con distintos formatos y plataformas sin necesidad de que el usuario instale software adicional manualmente. Es capaz de funcionar con una gran variedad de librerías del sistema para lectura de audio, incluyendo todas las que soportan el resto de opciones, y en sistemas operativos en los que no se encuentra una de ellas por defecto, se incluye junto con la librería.
 
 Adicionalmente, es una opción excelente para el proyecto, ya que, proporciona funciones relacionadas con el análisis musical, como estimación de las pulsaciones por minuto de la canción, transformación de hercios a tonos MIDI, normalización del audio y otras utilidades.
+
+\subsubsection{Estimación de frecuencia fundamental}
+
+La técnica usada para estimar la frecuencia fundamental de la voz debe tener la mayor precisión posible, teniendo en cuenta la rapidez con la que se completa la estimación como algo secundario. La precisión es la principal prioridad, ya que, es preferible que el creador de karaoke espere más tiempo a que tenga revisar manualmente las predicciones incorrectas.
+
+Algoritmos clásicos como pYIN \cite{pYIN} son rápidos. Sin embargo, enfoques utilizando redes neuronales, como CREPE \cite{CREPE} y SPICE \cite{SPICE} han logrado mayor precisión y son el actual estado del arte.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\linewidth]{logos/crepe_comparison}
+	\caption{Comparación de CREPE con algoritmos clásicos. \cite{CREPE}}
+	\label{fig:crepecomparison}
+\end{figure}
+
+En la figura \ref{fig:spicecomparison}, extraída del ensayo de SPICE, se puede observar como la precisión de CREPE y SPICE es muy similar, con una ligera ventaja de CREPE en el conjunto de datos de prueba que contiene más muestras con voz.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\linewidth]{logos/spice_comparison}
+	\caption{Comparación de SPICE con CREPE}
+	\label{fig:spicecomparison}
+\end{figure}
+
+Teniendo esto en cuenta, que CREPE ha recibido mejoras después de su publicación original \footnote{\url{https://pypi.org/project/crepe/}} y que su integración en el proyecto es más sencilla se considera mejor opción que SPICE y será utilizada para estimar las frecuencias fundamentales de la voz en las canciones.
+
+Soportar el uso de pYIN podría ser útil en un hito posterior, para ofrecer una alternativa más rápida y de menor tamaño, aunque CREPE ofrece la opción de utilizar modelos reducidos para una inferencia más rápida.
+
+
+\subsubsection{Funcionamiento de la aplicación}
+
+Primeramente, se analizan los argumentos pasados a la aplicación, definidos con la utilidad argparse de la librería estandar de Python.
+
+Se ha escrito una ayuda que explica el uso de los argumentos, entre los que se encuentran los parámetros que recibe CREPE, usando los mismos valores por defecto que utiliza la función de predicción, y los siguientes adicionales:
+
+\begin{itemize}
+	\item{\texttt{filepath}, ruta del archivo UltraStar txt de entrada.}
+	\item{\texttt{--output | -o [OUTPUT\_PATH], ruta del archivo UltraStar txt de salida. Por defecto crea un archivo en la misma ruta que el archivo de entrada pero añadiendo "\texttt{\_pitched}" al nombre para evitar sobrescribir el archivo original.}
+	\item{\texttt{--confidence | -c [CONFIDENCE], establece la confianza mínima que debe tener una predicción de CREPE para tenerla en cuenta.}}
+\end{itemize}
+
+Una vez analizados los argumentos, se lee el fichero de entrada con la librería construida para tal propósito, pudiendo acceder así fácilmente a la localización del audio de la canción y la información necesaria para localizar los intervalos de tiempo de las notas.
+
+Después, se carga el audio de la canción como un vector de muestras normalizado. A partir del audio, se predice una lista de frecuencias fundamentales en hercios utilizando CREPE, cada predicción con un nivel de confianza asociado.
+
+Se calcula en que milisegundo empieza y en cuál acaba cada nota, a partir de la notación por defecto en la que se indica en que pulsación empieza cada nota y cuantas pulsaciones dura y los metadatos de la canción.
+
+Para ello primero necesitamos saber la duración de una pulsación, teniendo en cuenta que el valor para pulsaciones por minuto "\textit{bpm}" contenido en los metadatos del archivo UltraStar txt es multiplicado por 4 para tener un posicionamiento de notas más preciso:
+
+\begin{displaymath}
+	l = 60000 \frac{milisegundos}{minuto} \div (4bpm)\frac{pulsaciones}{minuto} = 15000 / bpm\frac{milisegundos}{pulsacion}
+\end{displaymath}
+
+Una vez tenemos esta información, siendo \texttt{"gap"} el metadato que indica el retraso respecto al inicio de la canción en milisegundos, \texttt{"x\_1"} el número de pulsaciones en el que empieza la nota, \texttt{"x\_2"} el número de pulsaciones que dura la nota, \texttt{"y\_1"} el milisegundo en el que empieza la nota e \texttt{"y\_2"} el milisegundo en el que acaba la nota:
+
+\begin{displaymath}
+	y_1 =  x_1 * l + gap
+\end{displaymath}
+
+\begin{displaymath}
+	y_2 = x_2 * l + y_1
+\end{displaymath}
+
+Se calculan los tonos MIDI que corresponden a cada nota, haciendo la media de las frecuencias que estén dentro del principio y fin de cada nota, descartando aquellas que no lleguen al nivel mínimo de confianza establecido en los argumentos y transformando la frecuencia media obtenida de hercios a notas MIDI utilizando la función incluida en \texttt{librosa}.
+
+Finalmente, el programa escribe un archivo de texto con los tonos actualizados en la localización indicada por los argumentos.
+
+\subsection{Tests}
+
+El código añadido durante el desarrollo de este hito está cubierto tanto por tests unitarios como tests de integración al 99,11\%.
+
+Los tests se han definido con la intención de cubrir solo un caso lógico por cada test, lo que permite saber con precisión que funciona exactamente y que no, y cubrir la mayor cantidad posible de casos lógicos.
+
+Para mejorar la legibilidad, reusabilidad y el mantenimiento de los tests los datos utilizados en las pruebas han sido definidos como constantes, en un archivo común si son usados en múltiples módulos o en el módulo correspondiente si solo son usados por uno de ellos.
+
+
+
+
