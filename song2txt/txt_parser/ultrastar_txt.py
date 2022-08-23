@@ -6,11 +6,6 @@ class UltraStarTXT:
     def __init__(self, metadata: MetaData, song_lines):
         self.metadata = metadata
         self.song_lines = song_lines
-        self.notes = []
-
-        for line in self.song_lines:
-            if isinstance(line, Note):
-                self.notes.append(line)
 
     def __str__(self) -> str:
         text = str(self.metadata)
@@ -23,3 +18,12 @@ class UltraStarTXT:
     def __eq__(self, other: object) -> bool:
         return isinstance(other, type(self)) and \
                self.__dict__ == other.__dict__
+
+    def get_notes(self):
+        notes = []
+
+        for line in self.song_lines:
+            if isinstance(line, Note):
+                notes.append(line)
+
+        return notes

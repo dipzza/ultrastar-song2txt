@@ -39,12 +39,13 @@ def main():
                                      viterbi=args.viterbi,
                                      step_size=args.step_size)
 
-    notes = notes_to_array(us_txt.notes)
-    notes_ms = beat_to_ms(notes, us_txt.metadata.bpm, us_txt.metadata.gap)
-    intervals = np.int_(notes_ms[:, :2] / args.step_size)
+    notes = us_txt.get_notes()
+    notes_arr = notes_to_array(notes)
+    notes_arr = beat_to_ms(notes_arr, us_txt.metadata.bpm, us_txt.metadata.gap)
+    intervals = np.int_(notes_arr[:, :2] / args.step_size)
     pitches = calculate_pitches(freq, conf, intervals, args.confidence)
 
-    for note, pitch in zip(us_txt.notes, pitches):
+    for note, pitch in zip(notes, pitches):
         note.pitch = pitch
 
     if args.output is None:
