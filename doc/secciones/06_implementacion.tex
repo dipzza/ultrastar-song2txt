@@ -108,3 +108,63 @@ Para organizar los archivos de la aplicación se deseaba una estructura simple, 
 	\caption{Ejemplo de estructura plana}
 	\label{fig:layout1}
 \end{figure}
+
+
+\subsection{Librería para trabajar con archivos UltraStar txt}
+
+Para poder empezar a construir la aplicación es necesario poder trabajar con los archivos de texto que definen las canciones de karaoke. Concretamente, con el formato de texto estándar UltraStar txt \footnote{https://github.com/UltraStar-Deluxe/Play/wiki/UltraStar-txt-File-Format},  utilizado por la mayoría de videojuegos de karaoke libres, incluidos los mencionados en la sección \ref{sec:motivation}.
+
+Con esta intención, se ha construido una librería para leer este tipo de archivos transformando el texto a estructuras de datos apropiadas para trabajar con ellas y para escribir nuevos archivos generando el texto correspondiente a partir de las estructuras de datos.
+
+\subsubsection{Lectura del archivo}
+
+En la definición del formato UltraStar txt no se establece la codificación de caracteres que deben usar los archivos, y como resultado, se comparten con distintas codificaciones. Tampoco es posible determinar la codificación a partir del archivo de forma sencilla, ya que son archivos de texto plano donde no se encuentra especificada.
+
+Buscando la mayor compatibilidad se consideraron los siguientes acercamientos para decodificar los archivos:
+
+\begin{itemize}
+	\item{Probar a decodificar el texto por cada codificación posible hasta que todos los caracteres se descodifiquen sin ningún error.}
+	\item{Utilizar una librería que estime la codificación más probable para el contenido del archivo.}
+	\begin{itemize}
+		\item{Chardet}
+		\item{cChardet}
+		\item{Charset Normalizer}
+	\end{itemize}
+\end{itemize}
+
+Inicialmente, se consideró usar la primera opción porque no añadía dependencias al proyecto. Sin embargo, era posible que se acabara utilizando una codificación que no generara ningún error, pero interpretara incorrectamente algunos caracteres (por ejemplo el carácter \texttt{"ñ"} podía ser interpretado incorrectamente como \texttt{"ń"}).
+
+Por este motivo se decidió usar el segundo acercamiento y así obtener una fiabilidad mayor. Teniendo en cuenta las pruebas de rendimiento disponibles en la \href{https://github.com/Ousret/charset_normalizer}{web} de Charset Normalizer y el tamaño de cada librería la opción más adecuada a las necesidades del proyecto es Charset Normalizer, ya que, presenta la mayor precisión y el menor tamaño de las opciones consideradas.
+
+La implementación final estima el formato de codificación del archivo de texto entre varias opciones comunes (el formato estándar UTF-8 definido en la \href{https://www.rfc-editor.org/rfc/rfc3629}{RFC 3629} y aquellos usados por defecto en versiones antiguas del sistema operativo Windows). Si aun así no se decodificara el texto correctamente, como última opción, el usuario podría utilizar la utilidad de la línea de comandos incluida con Charset Normalizer para transformar el archivo de texto a UTF-8 seleccionando manualmente la interpretación correcta.
+
+\subsubsection{Estructuras de datos}
+
+Como plantillas para las estructuras de datos se han definido las clases representadas en la figura \ref{fig:class1}, intentando crear capas de abstracción adecuadas al dominio del problema. Además, se han definido algunos comportamientos asociados:
+\begin{itemize}
+	\item{Comprobaciones de que los valores que se asignen son válidos (por ejemplo, la duración de una nota no puede ser negativa) tanto en creación como en modificación, en caso contrario, se indica el problema lanzando una excepción del tipo correspondiente con un mensaje que explica el error.}
+	\item{Métodos para generar el texto que correspondería en un archivo UltraStar txt a partir de los datos almacenados en el objeto.}
+	\item{Implementación del método \texttt{\_\_eq\_\_} para poder comparar objetos  y determinar si son iguales.}
+\end{itemize}
+
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{logos/classes.png}
+	\caption{Diagrama de clases}
+	\label{fig:class1}
+\end{figure}
+
+\subsubsection{Extracción de datos del texto}
+
+Se desea separar y extraer los fragmentos de texto que contienen la información relevante, para poder convertirlos a las estructuras de datos definidas. Buscando un método fácil de mantener y que permita garantizar que el texto de entrada presenta un formato correcto se han considerado las siguientes opciones:
+
+\begin{itemize}
+	\item{Operaciones básicas de transformación de texto, como separar por cada espacio, para quedarnos con una lista de los valores que necesitamos.}
+	\item{Expresiones regulares para definir y detectar patrones.}
+	\item{Módulos externos para generar un analizador del texto a partir de una definición de la gramática.}
+\end{itemize}
+
+
+Para escoger la opción más adecuada es importante tener en cuenta que el formato del texto presenta un lenguaje regular, sencillo y sin anidado. Para este tipo de lenguaje las expresiones regulares son adecuadas permitiendo validar fácilmente que el texto presenta el formato correcto (a diferencia de las transformaciones básicas de texto) y siendo una solución corta, simple y precisa (a diferencia de los módulos de analizadores de propósito general, que son más adecuados para gramáticas complejas).
+
+Por lo tanto, la implementación realizada procesa cada línea por orden utilizando expresiones regulares (ya que cada fragmento de información se encuentra separado en una línea distinta) y transforma la información extraída en objetos de las clases definidas anteriormente, componiendo finalmente un solo objeto que contiene toda la información del archivo de texto.  Si el formato del texto es incorrecto, ya sea por no respetar el orden (primero un bloque de metadatos, después descripción de la canción) o porque alguna línea no coincide con ninguna de las expresiones regulares, se lanza una excepción indicando el error y mostrando el número de línea que lo ha causado y su contenido.
+
