@@ -43,6 +43,7 @@ Se busca un \textit{linter} fácil de configurar, que detecte errores de program
 Existen multitud de opciones que proveen estas funcionalidades, o parte de ellas, para código escrito en Python (pycodestyle, pylint, pyflakes, flake8,...). Se ha escogido flake8 porque además de agrupar la funcionalidad deseada al detectar errores de programación y estilísticos, incluye comprobaciones sobre la complejidad del código y es rápida.
 
 \paragraph*{Test unitarios y de integración.}
+\label{sec:tests}
 
 Es necesario un marco de pruebas para escribir y automatizar la ejecución de test unitarios (testean que cada parte de la aplicación funcione como se espera de forma aislada) y test de integración (testean que distintas partes de la aplicación trabajando juntas funcionan como se espera).
 
@@ -55,6 +56,7 @@ Finalmente, se ha elegido pytest debido a que posee una sintaxis más simple, lo
 Se ha definido un flujo de trabajo que verifica que el proyecto y sus dependencias se instalan correctamente, que las comprobaciones del \textit{linter} no reportan ningún error y que los test escritos se ejecutan sin errores cubriendo un porcentaje significativo del código (al menos el 85\%).
 
 \subsection{Gestión de dependencias y empaquetado}
+\label{sec:poetry}
 
 Un \textbf{entorno de desarrollo reproducible} que defina sus dependencias
 (librerías de códigos o paquetes que son reusados en un proyecto) es fundamental para asegurarnos de que los programas funcionan igual independientemente del equipo en el que se ejecuten.
@@ -95,4 +97,14 @@ Una de las muchas \textbf{ventajas del software libre} es que puedes \textbf{con
 	\item{Finalmente, se hizo un \textit{pull request} para \textbf{corregir un error de sintaxis} en la \textbf{plantilla de LaTeX} empleada. \href{https://github.com/JJ/plantilla-TFG-ETSIIT/pull/7}{Enlace al \textit{pull request}}.}
 \end{enumerate}
 
-\section{Hito 1}
+\section{Hito 1. Estimación de tonos}
+
+\subsection{Estructura del proyecto}
+Para organizar los archivos de la aplicación se deseaba una estructura simple, fácil para trabajar con ella y de entender.  La estructura "plana" o "\textit{adhoc}"  ejemplificada en la figura \ref{fig:layout1} usa una cantidad reducida de carpetas y profundidad que aun así organiza los archivos de forma lógica.  Por ello, se han organizado los archivos según esta estructura  que cumple los requisitos y es reconocida sin configuración adicional por herramientas usadas en el proyecto como Poetry (sección \ref{sec:poetry}) o Pytest (sección \ref{sec:tests}).
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.5\linewidth]{logos/layout.png}
+	\caption{Ejemplo de estructura plana}
+	\label{fig:layout1}
+\end{figure}
