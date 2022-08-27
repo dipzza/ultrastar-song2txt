@@ -1,11 +1,14 @@
+from dataclasses import dataclass
+from typing import List
+
 from .metadata import MetaData
-from .song_line import Note
+from .song_line import Note, SongLine
 
 
+@dataclass
 class UltraStarTXT:
-    def __init__(self, metadata: MetaData, song_lines):
-        self.metadata = metadata
-        self.song_lines = song_lines
+    metadata: MetaData
+    song_lines: List[SongLine]
 
     def __str__(self) -> str:
         text = str(self.metadata)
@@ -14,10 +17,6 @@ class UltraStarTXT:
         text += 'E'
 
         return text
-
-    def __eq__(self, other: object) -> bool:
-        return isinstance(other, type(self)) and \
-               self.__dict__ == other.__dict__
 
     def get_notes(self):
         notes = []
