@@ -82,12 +82,22 @@ def test_parse_song_line_invalid():
     assert txt_parser.parse_song_line(c.WORD) is None
 
 
-def test_parse_line_metadata(metadata_dict, metadata_text):
-    for item, line in zip(metadata_dict.items(), metadata_text.splitlines()):
-        key, value = item
-        parsed_key, parsed_value = txt_parser.parse_metadata_line(line)
+def test_parse_line_metadata(metadata_text):
+    expected = (
+        (c.TITLE_TAG, c.TITLE),
+        (c.ARTIST_TAG, c.ARTIST),
+        (c.MP3_TAG, c.MP3),
+        (c.BPM_TAG, c.BPM),
+        (c.YEAR_TAG, c.YEAR),
+        (c.RELATIVE_TAG, c.RELATIVE),
+        (c.GAP_TAG, c.GAP),
+    )
 
-        assert parsed_key == key
+    for item, line in zip(expected, metadata_text.splitlines()):
+        tag, value = item
+        parsed_tag, parsed_value = txt_parser.parse_metadata_line(line)
+
+        assert parsed_tag == tag
         assert parsed_value == value
 
 

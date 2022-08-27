@@ -13,6 +13,11 @@ REG_PHRASE_END = r'- (\d+) ?(\d+)?'
 REG_META = r'# *(\S*) *: *(.*) *'
 FILE_END = 'E'
 
+INT_META_TAGS = 'YEAR'
+BOOL_META_TAGS = 'RELATIVE'
+BOOL_META_TRUE = 'YES'
+FLOAT_META_TAGS = ['BPM', 'GAP', 'VIDEOGAP', 'PREVIEWSTART']
+
 
 def read_file(path: PathLike) -> UltraStarTXT:
     cp_list = ['utf-8', 'windows-1252', 'ISO-8859-1']
@@ -27,29 +32,28 @@ def write_file(us_txt: UltraStarTXT, path: PathLike):
 
 
 def parse_text(text: str) -> UltraStarTXT:
-    metadata = MetaData()
+    metadata_dict = {}
     song_lines = []
 
     lines = text.splitlines()
-    is_metadata = True
     i = 0
-    while i < len(lines) and is_metadata:
+    while i < len(lines):
         parsed = parse_metadata_line(lines[i])
         if isinstance(parsed, tuple):
-            metadata.add(*parsed)
+            metadata_dict[parsed[0].lower()] = parsed[1]
             i += 1
         else:
-            is_metadata = False
+            break
 
     while i < len(lines) and not lines[i].startswith(FILE_END):
         song_line = parse_song_line(lines[i])
         if isinstance(song_line, SongLine):
             song_lines.append(song_line)
+            i += 1
         else:
             raise Exception(f'Incorrect format in line {i}: {lines[i]}')
-        i += 1
 
-    return UltraStarTXT(metadata, song_lines)
+    return UltraStarTXT(MetaData(**metadata_dict), song_lines)
 
 
 def parse_song_line(line: str):
@@ -70,10 +74,8 @@ def parse_song_line(line: str):
     elif match_phrase:
         start_beat = int(match_phrase.group(1))
         end_beat = match_phrase.group(2)
-        if end_beat is None:
-            parsed = PhraseEnd(start_beat)
-        else:
-            parsed = PhraseEnd(start_beat, int(end_beat))
+        end_beat = int(end_beat) if end_beat else None
+        parsed = PhraseEnd(start_beat, end_beat)
 
     return parsed
 
@@ -81,6 +83,16 @@ def parse_song_line(line: str):
 def parse_metadata_line(line: str):
     match = re.compile(REG_META).match(line)
     if match:
-        return match.group(1), match.group(2)
+        tag = match.group(1)
+        value = match.group(2)
+
+        if tag in FLOAT_META_TAGS:
+            value = float(value.replace(',', '.'))
+        elif tag in INT_META_TAGS:
+            value = int(value)
+        elif tag == BOOL_META_TAGS:
+            value = value == BOOL_META_TRUE
+
+        return tag, value
     else:
         return None

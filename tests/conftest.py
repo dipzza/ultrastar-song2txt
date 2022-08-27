@@ -13,55 +13,48 @@ WORD = 'Word'
 PLAYER = 1
 END_BEAT = 1
 
-# Other
+# TXT parsing
 PATH = 'song.txt'
 FILE_END = 'E'
+
+# Metadata
+TITLE_TAG = 'TITLE'
+TITLE = 'song name'
+ARTIST_TAG = 'ARTIST'
+ARTIST = 'artist name'
+MP3_TAG = 'MP3'
+MP3 = 'song name.mp3'
+BPM_TAG = 'BPM'
+BPM = 300.0
+BPM_STR = '300'
+RELATIVE_TAG = 'RELATIVE'
+RELATIVE = False
+RELATIVE_STR = 'NO'
+GAP_TAG = 'GAP'
+GAP = 10.5
+GAP_STR = '10.5'
+YEAR_TAG = 'YEAR'
+YEAR = 2007
+YEAR_STR = '2007'
 
 
 # Fixtures
 @pytest.fixture
-def metadata_dict():
-    return {
-        'TITLE': 'song name',
-        'ARTIST': 'artist name',
-        'MP3': 'song name.mp3',
-        'BPM': '300',
-        'GENRE': 'Pop',
-        'YEAR': '2007',
-        'EDITION': 'Christmas',
-        'CREATOR': 'Julia',
-        'LANGUAGE': 'English',
-        'COVER': 'song name.jpg',
-        'VOCALS': 'song name vocals.mp3',
-        'VIDEO': 'song name.mkv',
-        'BACKGROUND': 'song name background.jpg',
-        'RELATIVE': 'NO',
-        'GAP': '10.5',
-        'VIDEOGAP': '3',
-        'PREVIEWSTART': '60',
-        'DUETSINGERP1': 'Javier',
-        'DUETSINGERP2': 'Julia',
-        'EXTRA': 'valor extra'
-    }
+def metadata():
+    return MetaData(TITLE, ARTIST, MP3, BPM,
+                    year=YEAR, relative=RELATIVE, gap=GAP)
 
 
 @pytest.fixture
-def metadata(metadata_dict):
-    metadata = MetaData()
-
-    for key, value in metadata_dict.items():
-        metadata.add(key, value)
-
-    return metadata
-
-
-@pytest.fixture
-def metadata_text(metadata_dict):
+def metadata_text():
     model = '#{}:{}\n'
-    text = ''
-
-    for key, value in metadata_dict.items():
-        text += model.format(key, value)
+    text = model.format(TITLE_TAG, TITLE)
+    text += model.format(ARTIST_TAG, ARTIST)
+    text += model.format(MP3_TAG, MP3)
+    text += model.format(BPM_TAG, BPM_STR)
+    text += model.format(YEAR_TAG, YEAR_STR)
+    text += model.format(RELATIVE_TAG, RELATIVE_STR)
+    text += model.format(GAP_TAG, GAP_STR)
 
     return text
 
