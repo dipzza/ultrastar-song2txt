@@ -1,6 +1,9 @@
 DOC := proyecto.tex
 
-spellargs := --ignore sh:seclen,sh:stacked --remove-macros tableofcontents,listoffigures,listoftables,begin,centeroffset,oddsidemargin,evensidemargin,centering,bfseries,end,cleardoublepage,setlength,texttt
+ignored_envs := otherlanguage,displaymath
+ignored_rules := sh:seclen,sh:stacked
+ignored_macros := tableofcontents,listoffigures,listoftables,begin,centeroffset,oddsidemargin,evensidemargin,centering,bfseries,end,cleardoublepage,setlength,texttt
+dict_es := ../.github/workflows/words-allowlist.txt
 
 all: doc
 
@@ -17,7 +20,7 @@ clean:
 check: es-check en-check
 
 es-check:
-	textidote --check es --remove otherlanguage --dict ../.github/workflows/words-allowlist.txt $(spellargs) proyecto.tex
+	textidote --check es --ignore $(ignored_rules) --remove $(ignored_envs) --remove-macros $(ignored_macros) --dict $(dict_es) proyecto.tex
 
 en-check:
-	textidote --check en --read-all $(spellargs) prefacios/english_abstract.tex
+	textidote --check en --read-all --ignore $(ignored_rules) --remove-macros $(ignored_macros) prefacios/english_abstract.tex

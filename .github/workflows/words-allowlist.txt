@@ -53,3 +53,5 @@ SoundFile
 Pydub
 audioread
 librosa
+SPICE
+pYIN
