@@ -102,12 +102,12 @@ Una de las muchas \textbf{ventajas del software libre} es que puedes \textbf{con
 Se ha implementado una aplicación para asignar los tonos de forma automatizada en el proceso de creación de una canción para videojuegos de karaoke. Al completar este hito se avanza en la satisfacción de los requisitos definidos en la historia de usuario de la sección \ref{sec:hu1}.
 
 \subsection{Estructura del proyecto}
-Para organizar los archivos de la aplicación se deseaba una estructura simple, fácil para trabajar con ella y de entender.  La estructura "plana" o "\textit{adhoc}"  ejemplificada en la figura \ref{fig:layout1} usa una cantidad reducida de carpetas y profundidad que aun así organiza los archivos de forma lógica.  Por ello, se han organizado los archivos según esta estructura  que cumple los requisitos y es reconocida sin configuración adicional por herramientas usadas en el proyecto como Poetry (sección \ref{sec:poetry}) o Pytest (sección \ref{sec:tests}).
+Para organizar los archivos de la aplicación, se deseaba una estructura sencilla y fácil de trabajar y  entender.  La estructura plana ejemplificada en la figura \ref{fig:layout1}, que usa una cantidad reducida de carpetas y profundidad, pero conservando una organización lógica.  Por lo tanto, los archivos se han organizado según esta estructura, que cumple los requisitos y es reconocida sin configuración adicional por las herramientas utilizadas en el proyecto como Poetry (sección \ref{sec:poetry}) o Pytest (sección \ref{sec:tests}).
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.5\linewidth]{logos/layout.png}
-	\caption{Ejemplo de estructura plana}
+	\caption{Ejemplo de estructura plana.}
 	\label{fig:layout1}
 \end{figure}
 
@@ -117,14 +117,15 @@ Los paquetes implementados, sus módulos y la relación de uso entre ellos puede
 
 \begin{figure}[h!]
 	\includegraphics[width=\linewidth]{logos/packages.png}
-	\caption{Diagrama de paquetes}
+	\caption{Diagrama de paquetes.}
 	\label{fig:modules1}
 \end{figure}
 
 
 \subsection{Librería para trabajar con archivos UltraStar txt}
+\label{sec:txtparser}
 
-Para poder empezar a construir la aplicación es necesario poder trabajar con los archivos de texto que definen las canciones de karaoke. Concretamente, con el formato de texto estándar UltraStar txt \footnote{https://github.com/UltraStar-Deluxe/Play/wiki/UltraStar-txt-File-Format},  utilizado por la mayoría de videojuegos de karaoke libres, incluidos los mencionados en la sección \ref{sec:motivation}.
+Para poder empezar a construir la aplicación es necesario poder trabajar con los archivos de texto que definen las canciones de karaoke. Concretamente, con el formato de texto estándar UltraStar txt\footnote{\url{https://github.com/UltraStar-Deluxe/Play/wiki/UltraStar-txt-File-Format}},  compatible con la mayoría de videojuegos de karaoke libres, incluidos los mencionados en la sección \ref{sec:motivation}.
 
 Con esta intención, se ha construido una librería para leer este tipo de archivos transformando el texto a estructuras de datos apropiadas para trabajar con ellas y para escribir nuevos archivos generando el texto correspondiente a partir de las estructuras de datos.
 
@@ -136,7 +137,7 @@ Buscando la mayor compatibilidad se consideraron los siguientes acercamientos pa
 
 \begin{itemize}
 	\item{Probar a decodificar el texto por cada codificación posible hasta que todos los caracteres se descodifiquen sin ningún error.}
-	\item{Utilizar una librería que estime la codificación más probable para el contenido del archivo.}
+	\item{Estimar la codificación más probable para el contenido del archivo con una librería externa.}
 	\begin{itemize}
 		\item{Chardet}
 		\item{cChardet}
@@ -144,11 +145,11 @@ Buscando la mayor compatibilidad se consideraron los siguientes acercamientos pa
 	\end{itemize}
 \end{itemize}
 
-Inicialmente, se consideró usar la primera opción porque no añadía dependencias al proyecto. Sin embargo, era posible que se acabara utilizando una codificación que no generara ningún error, pero interpretara incorrectamente algunos caracteres (por ejemplo el carácter \texttt{"ñ"} podía ser interpretado incorrectamente como \texttt{"ń"}).
+Inicialmente, se consideró la primera opción porque no añadía dependencias al proyecto. Sin embargo, era posible decodificar el texto sin errores, pero interpretando incorrectamente algunos caracteres (por ejemplo el carácter «ñ» podía ser interpretado incorrectamente como «ń»).
 
-Por este motivo se decidió usar el segundo acercamiento y así obtener una fiabilidad mayor. Teniendo en cuenta las pruebas de rendimiento disponibles en la \href{https://github.com/Ousret/charset_normalizer}{web} de Charset Normalizer y el tamaño de cada librería la opción más adecuada a las necesidades del proyecto es Charset Normalizer, ya que, presenta la mayor precisión y el menor tamaño de las opciones consideradas.
+Por esta razón se decidió emplear el segundo enfoque con mayor fiabilidad. Teniendo en cuenta las pruebas de rendimiento disponibles en la \href{https://github.com/Ousret/charset_normalizer}{web} de Charset Normalizer y el tamaño de cada librería la opción más adecuada a las necesidades del proyecto es Charset Normalizer, ya que, presenta la mayor precisión y el menor tamaño de las opciones consideradas.
 
-La implementación final estima el formato de codificación del archivo de texto entre varias opciones comunes (el formato estándar UTF-8 definido en la \href{https://www.rfc-editor.org/rfc/rfc3629}{RFC 3629} y aquellos usados por defecto en versiones antiguas del sistema operativo Windows). Si aun así no se decodificara el texto correctamente, como última opción, el usuario podría utilizar la utilidad de la línea de comandos incluida con Charset Normalizer para transformar el archivo de texto a UTF-8 seleccionando manualmente la interpretación correcta.
+La implementación final estima el formato de codificación del archivo de texto entre varias opciones comunes (el formato estándar UTF-8 definido en la \href{https://www.rfc-editor.org/rfc/rfc3629}{RFC 3629} y aquellos empleados por defecto en versiones antiguas del sistema operativo Windows). Si el texto sigue sin descodificarse correctamente, como último recurso, el usuario podría hacer uso de la utilidad de línea de comandos incluida en Charset Normalizer para transformar el archivo de texto a UTF-8 seleccionando manualmente la interpretación correcta.
 
 \subsubsection{Estructuras de datos}
 
@@ -161,7 +162,7 @@ Como plantillas para las estructuras de datos se han definido las clases represe
 
 \begin{figure}[H]
 	\includegraphics[width=\linewidth]{logos/classes.png}
-	\caption{Diagrama de clases}
+	\caption{Diagrama de clases.}
 	\label{fig:class1}
 \end{figure}
 
@@ -185,7 +186,7 @@ Por lo tanto, la implementación realizada procesa cada línea por orden utiliza
 
 \subsubsection{Carga del archivo de audio}
 
-El primer paso para poder estimar los tonos es cargar el audio de la canción en una estructura de datos usable, específicamente un vector de muestras.
+El primer paso para poder estimar los tonos es cargar el audio de la canción en una estructura de datos adecuada, específicamente un vector de muestras.
 
 Idealmente, el programa debería soportar la mayor variedad de formatos posibles en múltiples plataformas. Concretamente, la compatibilidad con el formato MP3 es relevante debido a su omnipresencia. Sin embargo, como consecuencia de la existencia de patentes alrededor del formato que no expiraron hasta 2017 \cite{mp3patents}, algunas librerías del sistema solo tienen soporte en las versiones más recientes (que una plataforma puede no haber recibido todavía).
 
@@ -199,12 +200,12 @@ Adicionalmente, es una opción excelente para el proyecto, ya que, proporciona f
 
 La técnica usada para estimar la frecuencia fundamental de la voz debe tener la mayor precisión posible, teniendo en cuenta la rapidez con la que se completa la estimación como algo secundario. La precisión es la principal prioridad, ya que, es preferible que el creador de karaoke espere más tiempo a que tenga revisar manualmente las predicciones incorrectas.
 
-Algoritmos clásicos como pYIN \cite{pYIN} son rápidos. Sin embargo, enfoques utilizando redes neuronales, como CREPE \cite{CREPE} y SPICE \cite{SPICE} han logrado mayor precisión y son el actual estado del arte.
+Algoritmos clásicos como pYIN \cite{pYIN} son rápidos. Sin embargo, los enfoques utilizando redes neuronales, como CREPE \cite{CREPE} y SPICE \cite{SPICE}, son el actual estado del arte y gozan de mayor precisión como se puede observar en la figura \ref{fig:crepecomparison}.
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.7\linewidth]{logos/crepe_comparison}
-	\caption{Comparación de CREPE con algoritmos clásicos. \cite{CREPE}}
+	\caption{Comparación de CREPE con algoritmos clásicos \cite{CREPE}.}
 	\label{fig:crepecomparison}
 \end{figure}
 
@@ -213,40 +214,40 @@ En la figura \ref{fig:spicecomparison}, extraída del ensayo de SPICE, se puede 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.7\linewidth]{logos/spice_comparison}
-	\caption{Comparación de SPICE con CREPE}
+	\caption{Comparación de SPICE con CREPE.}
 	\label{fig:spicecomparison}
 \end{figure}
 
-Teniendo esto en cuenta, que CREPE ha recibido mejoras después de su publicación original \footnote{\url{https://pypi.org/project/crepe/}} y que su integración en el proyecto es más sencilla se considera mejor opción que SPICE y será utilizada para estimar las frecuencias fundamentales de la voz en las canciones.
+Teniendo esto en cuenta, que CREPE ha recibido mejoras después de su publicación original \footnote{\url{https://pypi.org/project/crepe/}} y que su integración en el proyecto es más sencilla se considera mejor opción que SPICE y es la elegida para estimar las frecuencias fundamentales.
 
-Soportar el uso de pYIN podría ser útil en un hito posterior, para ofrecer una alternativa más rápida y de menor tamaño, aunque CREPE ofrece la opción de utilizar modelos reducidos para una inferencia más rápida.
+Soportar el uso de pYIN podría ser útil en un hito posterior, para ofrecer una alternativa más rápida y de menor tamaño, aunque CREPE ofrece la opción de usar modelos reducidos para una inferencia más rápida.
 
 
 \subsubsection{Funcionamiento de la aplicación}
 
-Primeramente, se analizan los argumentos pasados a la aplicación, definidos con la utilidad argparse de la librería estandar de Python.
+Primeramente, se analizan los argumentos pasados a la aplicación, definidos con la utilidad \texttt{argparse} de la librería estándar de Python.
 
 Se ha escrito una ayuda que explica el uso de los argumentos, entre los que se encuentran los parámetros que recibe CREPE, usando los mismos valores por defecto que utiliza la función de predicción, y los siguientes adicionales:
 
 \begin{itemize}
-	\item{\texttt{filepath}, ruta del archivo UltraStar txt de entrada.}
-	\item{\texttt{--output | -o [OUTPUT\_PATH], ruta del archivo UltraStar txt de salida. Por defecto crea un archivo en la misma ruta que el archivo de entrada pero añadiendo "\texttt{\_pitched}" al nombre para evitar sobrescribir el archivo original.}
-	\item{\texttt{--confidence | -c [CONFIDENCE], establece la confianza mínima que debe tener una predicción de CREPE para tenerla en cuenta.}}
+	\item{\texttt{filepath:} Ruta del archivo UltraStar txt de entrada.}
+	\item{\texttt{--output | -o [OUTPUT\_PATH]:} Ruta del archivo UltraStar txt de salida. Por defecto crea un archivo en la misma ruta que el archivo de entrada pero añadiendo \texttt{"\_pitched"} al nombre para evitar sobrescribir el archivo original.}
+	\item{\texttt{--confidence | -c [CONFIDENCE]:} Establece la confianza mínima que debe tener una predicción de CREPE para tenerla en cuenta.}
 \end{itemize}
 
-Una vez analizados los argumentos, se lee el fichero de entrada con la librería construida para tal propósito, pudiendo acceder así fácilmente a la localización del audio de la canción y la información necesaria para localizar los intervalos de tiempo de las notas.
+Una vez analizados los argumentos, se carga el proyecto de canción del fichero de entrada con la librería construida para tal propósito \ref{sec:txtparser}.
 
-Después, se carga el audio de la canción como un vector de muestras normalizado. A partir del audio, se predice una lista de frecuencias fundamentales en hercios utilizando CREPE, cada predicción con un nivel de confianza asociado.
+Después, se carga el audio de la canción como un vector de muestras normalizado. A partir del audio, se predice una lista de frecuencias fundamentales en hercios empleando CREPE, cada predicción con un nivel de confianza asociado.
 
 Se calcula en que milisegundo empieza y en cuál acaba cada nota, a partir de la notación por defecto en la que se indica en que pulsación empieza cada nota y cuantas pulsaciones dura y los metadatos de la canción.
 
-Para ello primero necesitamos saber la duración de una pulsación, teniendo en cuenta que el valor para pulsaciones por minuto "\textit{bpm}" contenido en los metadatos del archivo UltraStar txt es multiplicado por 4 para tener un posicionamiento de notas más preciso:
+Para ello primero necesitamos saber la duración de una pulsación, teniendo en cuenta que las pulsaciones por minuto \texttt{"bpm"} contenidas en los metadatos de la canción son multiplicadas por 4 para tener un posicionamiento de notas más preciso:
 
 \begin{displaymath}
 	l = 60000 \frac{milisegundos}{minuto} \div (4bpm)\frac{pulsaciones}{minuto} = 15000 / bpm\frac{milisegundos}{pulsacion}
 \end{displaymath}
 
-Una vez tenemos esta información, siendo \texttt{"gap"} el metadato que indica el retraso respecto al inicio de la canción en milisegundos, \texttt{"x\_1"} el número de pulsaciones en el que empieza la nota, \texttt{"x\_2"} el número de pulsaciones que dura la nota, \texttt{"y\_1"} el milisegundo en el que empieza la nota e \texttt{"y\_2"} el milisegundo en el que acaba la nota:
+Una vez tenemos esta información, siendo \texttt{"gap"} el retraso respecto al inicio de la canción en milisegundos, \texttt{"x\_1"} el número de pulsaciones en el que empieza la nota, \texttt{"x\_2"} el número de pulsaciones que dura la nota, \texttt{"y\_1"} el milisegundo en el que empieza la nota y \texttt{"y\_2"} el milisegundo en el que acaba la nota:
 
 \begin{displaymath}
 	y_1 =  x_1 * l + gap
@@ -256,18 +257,15 @@ Una vez tenemos esta información, siendo \texttt{"gap"} el metadato que indica 
 	y_2 = x_2 * l + y_1
 \end{displaymath}
 
-Se calculan los tonos MIDI que corresponden a cada nota, haciendo la media de las frecuencias que estén dentro del principio y fin de cada nota, descartando aquellas que no lleguen al nivel mínimo de confianza establecido en los argumentos y transformando la frecuencia media obtenida de hercios a notas MIDI utilizando la función incluida en \texttt{librosa}.
+Se calculan los tonos MIDI que corresponden a cada nota, haciendo la media de las frecuencias que estén dentro del principio y fin de cada nota, descartando aquellas que no lleguen al nivel mínimo de confianza establecido en los argumentos y transformando la frecuencia media obtenida de hercios a notas MIDI con la función \texttt{hz\_to\_midi} de librosa.
 
 Finalmente, el programa escribe un archivo de texto con los tonos actualizados en la localización indicada por los argumentos.
 
 \subsection{Tests}
 
-El código añadido durante el desarrollo de este hito está cubierto tanto por tests unitarios como tests de integración al 99,11\%.
+El código añadido durante el desarrollo de este hito está cubierto tanto por tests unitarios como tests de integración al 100\%.
 
-Los tests se han definido con la intención de cubrir solo un caso lógico por cada test, lo que permite saber con precisión que funciona exactamente y que no, y cubrir la mayor cantidad posible de casos lógicos.
+Los tests se han definido con la intención de cubrir un único caso lógico por cada test, lo que permite saber con precisión que funciona exactamente y que no, y cubrir la mayor cantidad posible de casos lógicos.
 
-Para mejorar la legibilidad, reusabilidad y el mantenimiento de los tests los datos utilizados en las pruebas han sido definidos como constantes, en un archivo común si son usados en múltiples módulos o en el módulo correspondiente si solo son usados por uno de ellos.
-
-
-
+Para mejorar la legibilidad, reusabilidad y el mantenimiento de los tests los datos de prueba han sido definidos como constantes, en un archivo común si son usados en múltiples módulos o en el módulo correspondiente si solo son usados por uno de ellos.
 
