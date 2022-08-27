@@ -1,5 +1,6 @@
 from unittest import mock
 import sys
+import importlib
 
 import pytest
 import numpy as np
@@ -20,6 +21,12 @@ UNK = -1
 CONF_THRESHOLD = 0.8
 H_CONF = 0.9
 L_CONF = 0.1
+
+
+@mock.patch('song2txt.pitch_cli.main')
+def test_entry_point(mock_main):
+    importlib.import_module('song2txt.__main__')
+    assert mock_main.is_called_once()
 
 
 @pytest.fixture
