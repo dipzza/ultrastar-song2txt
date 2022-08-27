@@ -47,8 +47,7 @@ def notes_to_array(notes):
 def beat_to_ms(note_array, bpm, gap):
     beat_length = BEAT_LENGTH_FACTOR / bpm
     note_array = note_array.astype(float)
-    if note_array.ndim == 1:
-        note_array = note_array.reshape(-1, 3)
+    note_array = note_array.reshape(-1, 3)
 
     note_array[:, 0] = note_array[:, 0] * beat_length + gap
     note_array[:, 1] = note_array[:, 1] * beat_length + note_array[:, 0]
