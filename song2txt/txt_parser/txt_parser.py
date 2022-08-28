@@ -7,10 +7,10 @@ from .ultrastar_txt import UltraStarTXT
 from .song_line import Note, PlayerChange, PhraseEnd, NoteType, SongLine
 from .metadata import MetaData
 
-REG_PLAYER = r'P(\d)'
-REG_NOTE = r'([:*FRG]) (\d+) (\d+) (\d+) *(.*)'
-REG_PHRASE_END = r'- (\d+) ?(\d+)?'
-REG_META = r'# *(\S*) *: *(.*) *'
+REGEX_PLAYER = r'P(\d)'
+REGEX_NOTE = r'([:*FRG]) (\d+) (\d+) (\d+) *(.*)'
+REGEX_PHRASE_END = r'- (\d+) ?(\d+)?'
+REGEX_META = r'# *(\S*) *: *(.*) *'
 FILE_END = 'E'
 
 INT_META_TAGS = 'YEAR'
@@ -58,9 +58,9 @@ def parse_text(text: str) -> UltraStarTXT:
 
 def parse_song_line(line: str):
     parsed = None
-    match_player = re.compile(REG_PLAYER).match(line)
-    match_note = re.compile(REG_NOTE).match(line)
-    match_phrase = re.compile(REG_PHRASE_END).match(line)
+    match_player = re.compile(REGEX_PLAYER).match(line)
+    match_note = re.compile(REGEX_NOTE).match(line)
+    match_phrase = re.compile(REGEX_PHRASE_END).match(line)
 
     if match_player:
         parsed = PlayerChange(int(match_player.group(1)))
@@ -81,7 +81,7 @@ def parse_song_line(line: str):
 
 
 def parse_metadata_line(line: str):
-    match = re.compile(REG_META).match(line)
+    match = re.compile(REGEX_META).match(line)
     if match:
         tag = match.group(1)
         value = match.group(2)
