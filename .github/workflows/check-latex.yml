@@ -1,32 +1,30 @@
 name: Lint, spell & grammar check LaTeX document
 on: push
+env:
+  TEXTIDOTE_URL: https://github.com/sylvainhalle/textidote/releases/download/v0.8.3/textidote_0.8.3_all.deb
 jobs:
     check_latex:
         runs-on: ubuntu-latest
-        env:
-            IgnoreArgs: --ignore sh:seclen,sh:stacked --remove-macros tableofcontents,listoffigures,listoftables,begin,centeroffset,oddsidemargin,evensidemargin,centering,bfseries,end,cleardoublepage,setlength,texttt
+        defaults:
+          run:
+            working-directory: ./doc
         steps:
             - name: Set up Git repository
               uses: actions/checkout@v2
-            - name: Check Spanish text
-              uses: ChiefGokhlayeh/textidote-action@v5.1.0
+            - name: Download textidote
+              run: wget $TEXTIDOTE_URL
+            - name: Install textidote
+              run: sudo apt-get install ./textidote_*_all.deb
+            - name: Check spanish text
               id: check_es
-              with:
-                  root_file: doc/proyecto.tex
-                  report_file: report_es.html
-                  args: --check es --remove otherlanguage --dict .github/workflows/words-allowlist.txt $IgnoreArgs
-            - name: Check English text
-              uses: ChiefGokhlayeh/textidote-action@v5.1.0
+              run: make es-check
+            - name: Check english text
+              if: success() || failure()
               id: check_en
-              with:
-                  root_file: doc/prefacios/english_abstract.tex
-                  report_file: report_en.html
-                  args: --check en --read-all $IgnoreArgs
-            - name: Upload TeXtidote report
+              run: make en-check
+            - name: Upload report artifact
+              if: success() || failure()
               uses: actions/upload-artifact@v3
               with:
-                  name: textidote_report
-                  path: report_*.html
-            - name: Throw error if warnings exist
-              if: ${{ steps.check_es.outputs.num_warnings != 0 || steps.check_en.outputs.num_warnings != 0}}
-              run: 'echo "::error file=doc/proyecto.tex::num_warnings_es: ${{ steps.check_es.outputs.num_warnings }}, num_warnings_en: ${{ steps.check_en.outputs.num_warnings }}"; exit 1;'
+                name: textidote_report
+                path: doc/report_*.html
