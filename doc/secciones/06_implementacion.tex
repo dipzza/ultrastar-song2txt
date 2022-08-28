@@ -184,15 +184,13 @@ Por lo tanto, la implementación realizada procesa cada línea por orden utiliza
 
 \subsection{Lectura de archivos de audio}
 
-
-
-El primer paso para poder estimar los tonos es cargar el audio de la canción en una estructura de datos adecuada, específicamente un vector de muestras.
+Para poder estimar los tonos es necesario cargar el audio de la canción en una estructura de datos adecuada, específicamente un vector de muestras.
 
 Idealmente, el programa debería soportar la mayor variedad de formatos posibles en múltiples plataformas. Concretamente, la compatibilidad con el formato MP3 es relevante debido a su omnipresencia. Sin embargo, como consecuencia de la existencia de patentes alrededor del formato que no expiraron hasta 2017 \cite{mp3patents}, algunas librerías del sistema solo tienen soporte en las versiones más recientes (que una plataforma puede no haber recibido todavía).
 
 Existen varias librerías de Python mantenidas activamente que permiten cargar audio en varios formatos (SoundFile, Pydub, audioread y librosa), pero todas dependen de librerías del sistema que el usuario puede no tener instaladas para decodificar formatos con compresión, como MP3.
 
-La opción elegida es \textbf{librosa} porque satisface la compatibilidad con distintos formatos y plataformas sin necesidad de que el usuario instale software adicional manualmente. Es capaz de funcionar con una gran variedad de librerías del sistema para lectura de audio, incluyendo todas las que soportan el resto de opciones, y en sistemas operativos en los que no se encuentra una de ellas por defecto, se incluye junto con la librería.
+La opción elegida es librosa, porque satisface la compatibilidad con distintos formatos y plataformas sin necesidad de que el usuario instale software adicional manualmente. Es capaz de funcionar con una amplia variedad de librerías del sistema para lectura de audio, incluyendo todas las soportadas por el resto de opciones, y en sistemas operativos en los que no se encuentra una de ellas por defecto, se incluye junto con la librería.
 
 Adicionalmente, es una opción excelente para el proyecto, ya que, proporciona funciones relacionadas con el análisis musical, como estimación de las pulsaciones por minuto de la canción, transformación de hercios a tonos MIDI, normalización del audio y otras utilidades.
 
