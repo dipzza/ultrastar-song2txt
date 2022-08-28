@@ -20,7 +20,11 @@ clean:
 check: es-check en-check
 
 es-check:
-	textidote --check es --ignore $(ignored_rules) --remove $(ignored_envs) --remove-macros $(ignored_macros) --dict $(dict_es) proyecto.tex
+	textidote --check es --ignore $(ignored_rules) --remove $(ignored_envs) \
+	--remove-macros $(ignored_macros) --dict $(dict_es) --output html \
+	proyecto.tex > report_es.html
 
 en-check:
-	textidote --check en --read-all --ignore $(ignored_rules) --remove-macros $(ignored_macros) prefacios/english_abstract.tex
+	textidote --check en --read-all --ignore $(ignored_rules) \
+	--remove-macros $(ignored_macros) --output html \
+	prefacios/english_abstract.tex > report_en.html
