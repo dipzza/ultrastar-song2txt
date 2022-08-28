@@ -129,7 +129,7 @@ Para poder empezar a construir la aplicación es necesario poder trabajar con lo
 
 Con esta intención, se ha construido una librería para leer este tipo de archivos transformando el texto a estructuras de datos apropiadas para trabajar con ellas y para escribir nuevos archivos generando el texto correspondiente a partir de las estructuras de datos.
 
-\subsubsection{Lectura del archivo}
+\subsubsection{Lectura y decodificación}
 
 En la definición del formato UltraStar txt no se establece la codificación de caracteres que deben usar los archivos, y como resultado, se comparten con distintas codificaciones. Tampoco es posible determinar la codificación a partir del archivo de forma sencilla, ya que son archivos de texto plano donde no se encuentra especificada.
 
@@ -151,7 +151,7 @@ Por esta razón se decidió emplear el segundo enfoque con mayor fiabilidad. Ten
 
 La implementación final estima el formato de codificación del archivo de texto entre varias opciones comunes (el formato estándar UTF-8 definido en la \href{https://www.rfc-editor.org/rfc/rfc3629}{RFC 3629} y aquellos empleados por defecto en versiones antiguas del sistema operativo Windows). Si el texto sigue sin descodificarse correctamente, como último recurso, el usuario podría hacer uso de la utilidad de línea de comandos incluida en Charset Normalizer para transformar el archivo de texto a UTF-8 seleccionando manualmente la interpretación correcta.
 
-\subsubsection{Estructuras de datos}
+\subsubsection{Diseño de las estructuras de datos}
 
 Como plantillas para las estructuras de datos se han definido las clases representadas en la figura \ref{fig:class1}, intentando crear capas de abstracción adecuadas al dominio del problema. Además, se han definido algunos comportamientos asociados:
 \begin{itemize}
@@ -166,7 +166,7 @@ Como plantillas para las estructuras de datos se han definido las clases represe
 	\label{fig:class1}
 \end{figure}
 
-\subsubsection{Extracción de datos del texto}
+\subsubsection{Transformación del texto a las estructuras de datos}
 
 Se desea separar y extraer los fragmentos de texto que contienen la información relevante, para poder convertirlos a las estructuras de datos definidas. Buscando un método fácil de mantener y que permita garantizar que el texto de entrada presenta un formato correcto se han considerado las siguientes opciones:
 
@@ -182,9 +182,9 @@ Para escoger la opción más adecuada es importante tener en cuenta que el forma
 Por lo tanto, la implementación realizada procesa cada línea por orden utilizando expresiones regulares (ya que cada fragmento de información se encuentra separado en una línea distinta) y transforma la información extraída en objetos de las clases definidas anteriormente, componiendo finalmente un solo objeto que contiene toda la información del archivo de texto.  Si el formato del texto es incorrecto, ya sea por no respetar el orden (primero un bloque de metadatos, después descripción de la canción) o porque alguna línea no coincide con ninguna de las expresiones regulares, se lanza una excepción indicando el error y mostrando el número de línea que lo ha causado y su contenido.
 
 
-\subsection{Aplicación de línea de comandos para estimar tonos}
+\subsection{Lectura de archivos de audio}
 
-\subsubsection{Carga del archivo de audio}
+
 
 El primer paso para poder estimar los tonos es cargar el audio de la canción en una estructura de datos adecuada, específicamente un vector de muestras.
 
@@ -196,7 +196,7 @@ La opción elegida es \textbf{librosa} porque satisface la compatibilidad con di
 
 Adicionalmente, es una opción excelente para el proyecto, ya que, proporciona funciones relacionadas con el análisis musical, como estimación de las pulsaciones por minuto de la canción, transformación de hercios a tonos MIDI, normalización del audio y otras utilidades.
 
-\subsubsection{Estimación de frecuencia fundamental}
+\subsection{Técnica para estimar frecuencias fundamentales}
 
 La técnica usada para estimar la frecuencia fundamental de la voz debe tener la mayor precisión posible, teniendo en cuenta la rapidez con la que se completa la estimación como algo secundario. La precisión es la principal prioridad, ya que, es preferible que el creador de karaoke espere más tiempo a que tenga revisar manualmente las predicciones incorrectas.
 
@@ -218,12 +218,10 @@ En la figura \ref{fig:spicecomparison}, extraída del ensayo de SPICE, se puede 
 	\label{fig:spicecomparison}
 \end{figure}
 
-Teniendo esto en cuenta, que CREPE ha recibido mejoras después de su publicación original \footnote{\url{https://pypi.org/project/crepe/}} y que su integración en el proyecto es más sencilla se considera mejor opción que SPICE y es la elegida para estimar las frecuencias fundamentales.
-
-Soportar el uso de pYIN podría ser útil en un hito posterior, para ofrecer una alternativa más rápida y de menor tamaño, aunque CREPE ofrece la opción de usar modelos reducidos para una inferencia más rápida.
+Teniendo esto en cuenta, que CREPE ha recibido mejoras después de su publicación original\footnote{\url{https://pypi.org/project/crepe/}}, que provee modelos de distintos tamaños según la compensación de velocidad y exactitud deseada y que su integración en el proyecto es más sencilla, se considera CREPE mejor opción que SPICE y es la elegida para estimar las frecuencias fundamentales.
 
 
-\subsubsection{Funcionamiento de la aplicación}
+\subsection{Descripción del proceso completo de la aplicación}
 
 Primeramente, se analizan los argumentos pasados a la aplicación, definidos con la utilidad \texttt{argparse} de la librería estándar de Python.
 
@@ -237,7 +235,7 @@ Se ha escrito una ayuda que explica el uso de los argumentos, entre los que se e
 
 Una vez analizados los argumentos, se carga el proyecto de canción del fichero de entrada con la librería construida para tal propósito \ref{sec:txtparser}.
 
-Después, se carga el audio de la canción como un vector de muestras normalizado. A partir del audio, se predice una lista de frecuencias fundamentales en hercios empleando CREPE, cada predicción con un nivel de confianza asociado.
+Después, se carga el audio de la canción como un vector de muestras normalizado. A partir del audio, se predice una lista de frecuencias en hercios empleando CREPE, cada predicción con un nivel de confianza asociado.
 
 Se calcula en que milisegundo empieza y en cuál acaba cada nota, a partir de la notación por defecto en la que se indica en que pulsación empieza cada nota y cuantas pulsaciones dura y los metadatos de la canción.
 
