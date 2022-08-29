@@ -3,20 +3,14 @@ from os import PathLike
 
 from charset_normalizer import from_path
 
-from .ultrastar_txt import UltraStarTXT
+from .ultrastar_txt import UltraStarTXT, FILE_END
 from .song_line import Note, PlayerChange, PhraseEnd, NoteType, SongLine
-from .metadata import MetaData
+from .metadata import MetaData, INT_TAGS, BOOL_TAGS, FLOAT_TAGS, META_STR_TRUE
 
 REGEX_PLAYER = r'P(\d)'
 REGEX_NOTE = r'([:*FRG]) (\d+) (\d+) (\d+) *(.*)'
 REGEX_PHRASE_END = r'- (\d+) ?(\d+)?'
 REGEX_META = r'# *(\S*) *: *(.*) *'
-FILE_END = 'E'
-
-INT_META_TAGS = 'YEAR'
-BOOL_META_TAGS = 'RELATIVE'
-BOOL_META_TRUE = 'YES'
-FLOAT_META_TAGS = ['BPM', 'GAP', 'VIDEOGAP', 'PREVIEWSTART']
 
 CODE_PAGES = ['utf-8', 'windows-1250', 'windows-1252']
 
@@ -87,12 +81,12 @@ def parse_metadata_line(line: str):
         tag = match.group(1)
         value = match.group(2)
 
-        if tag in FLOAT_META_TAGS:
+        if tag in FLOAT_TAGS:
             value = float(value.replace(',', '.'))
-        elif tag in INT_META_TAGS:
+        elif tag in INT_TAGS:
             value = int(value)
-        elif tag == BOOL_META_TAGS:
-            value = value == BOOL_META_TRUE
+        elif tag in BOOL_TAGS:
+            value = value == META_STR_TRUE
 
         return tag, value
     else:

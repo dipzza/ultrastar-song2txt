@@ -1,6 +1,22 @@
 from dataclasses import dataclass
 from typing import Optional
 
+TITLE_TAG = 'TITLE'
+ARTIST_TAG = 'ARTIST'
+MP3_TAG = 'MP3'
+BPM_TAG = 'BPM'
+YEAR_TAG = 'YEAR'
+RELATIVE_TAG = 'RELATIVE'
+META_STR_TRUE = 'YES'
+META_STR_FALSE = 'NO'
+GAP_TAG = 'GAP'
+VIDEOGAP_TAG = 'VIDEOGAP'
+PREVIEWSTART_TAG = 'PREVIEWSTART'
+
+INT_TAGS = [YEAR_TAG]
+BOOL_TAGS = [RELATIVE_TAG]
+FLOAT_TAGS = [BPM_TAG, GAP_TAG, VIDEOGAP_TAG, PREVIEWSTART_TAG]
+
 
 @dataclass(frozen=True)
 class MetaData:
