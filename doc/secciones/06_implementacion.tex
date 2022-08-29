@@ -99,7 +99,7 @@ Una de las muchas \textbf{ventajas del software libre} es que puedes \textbf{con
 
 \section{Hito 1. Estimación de tonos}
 
-Se ha implementado una aplicación para asignar los tonos de forma automatizada en el proceso de creación de una canción para videojuegos de karaoke. Al completar este hito se avanza en la satisfacción de los requisitos definidos en la historia de usuario de la sección \ref{sec:hu1}.
+Se han cumplido los requisitos de aceptación del hito mediante la implementación de una aplicación para asignar los tonos de forma automatizada en el proceso de creación de una canción para videojuegos de karaoke, cubierta por tests al 100\%. Al completar este hito se avanza en la satisfacción de los requisitos definidos en la historia de usuario de la sección \ref{sec:hu1}.
 
 \subsection{Estructura del proyecto}
 Para organizar los archivos de la aplicación, se deseaba una estructura sencilla y fácil de trabajar y  entender.  La estructura plana ejemplificada en la figura \ref{fig:layout1}, que usa una cantidad reducida de carpetas y profundidad, pero conservando una organización lógica.  Por lo tanto, los archivos se han organizado según esta estructura, que cumple los requisitos y es reconocida sin configuración adicional por las herramientas utilizadas en el proyecto como Poetry (sección \ref{sec:poetry}) o Pytest (sección \ref{sec:tests}).
@@ -222,31 +222,17 @@ En la figura \ref{fig:spicecomparison}, extraída del ensayo de SPICE, se puede 
 
 Teniendo esto en cuenta, que CREPE ha recibido mejoras después de su publicación original\footnote{\url{https://pypi.org/project/crepe/}}, que provee modelos de distintos tamaños según la compensación de velocidad y exactitud deseada y que su integración en el proyecto es más sencilla, se considera CREPE el actual estado del arte y la opción elegida para estimar las frecuencias fundamentales.
 
-\subsection{Descripción del proceso completo de la aplicación}
+\subsection{Cálculo de los tonos MIDI}
 
-Primeramente, se analizan los argumentos pasados a la aplicación, definidos con la utilidad \texttt{argparse} de la librería estándar de Python.
+Para calcular los tonos es necesario conocer el intervalo de tiempo en el que se produce cada nota en la canción. Esto se puede obtener transformando la información extraída del archivo UltraStar \texttt{txt}, que nos proporciona la pulsación en la que empieza y cuantas pulsaciones dura cada nota, las pulsaciones por minuto \texttt{"bpm"} de la canción y el retraso de las notas respecto al inicio de la canción \texttt{"gap"} en milisegundos.
 
-Se ha escrito una ayuda que explica el uso de los argumentos, entre los que se encuentran los parámetros que recibe CREPE, usando los mismos valores por defecto que utiliza la función de predicción, y los siguientes adicionales:
-
-\begin{itemize}
-	\item{\texttt{filepath:} Ruta del archivo UltraStar txt de entrada.}
-	\item{\texttt{--output | -o [OUTPUT\_PATH]:} Ruta del archivo UltraStar txt de salida. Por defecto crea un archivo en la misma ruta que el archivo de entrada pero añadiendo \texttt{"\_pitched"} al nombre para evitar sobrescribir el archivo original.}
-	\item{\texttt{--confidence | -c [CONFIDENCE]:} Establece la confianza mínima que debe tener una predicción de CREPE para tenerla en cuenta.}
-\end{itemize}
-
-Una vez analizados los argumentos, se carga el proyecto de canción del fichero de entrada con la librería construida para tal propósito \ref{sec:txtparser}.
-
-Después, se carga el audio de la canción como un vector de muestras normalizado. A partir del audio, se predice una lista de frecuencias en hercios empleando CREPE, cada predicción con un nivel de confianza asociado.
-
-Se calcula en que milisegundo empieza y en cuál acaba cada nota, a partir de la notación por defecto en la que se indica en que pulsación empieza cada nota y cuantas pulsaciones dura y los metadatos de la canción.
-
-Para ello primero necesitamos saber la duración de una pulsación, teniendo en cuenta que las pulsaciones por minuto \texttt{"bpm"} contenidas en los metadatos de la canción son multiplicadas por 4 para tener un posicionamiento de notas más preciso:
+Teniendo en cuenta que las pulsaciones por minuto son multiplicadas por 4 para tener un posicionamiento de notas más preciso, la duración de una pulsación en milisegundos es:
 
 \begin{displaymath}
 	l = 60000 \frac{milisegundos}{minuto} \div (4bpm)\frac{pulsaciones}{minuto} = 15000 / bpm\frac{milisegundos}{pulsacion}
 \end{displaymath}
 
-Una vez tenemos esta información, siendo \texttt{"gap"} el retraso respecto al inicio de la canción en milisegundos, \texttt{"x\_1"} el número de pulsaciones en el que empieza la nota, \texttt{"x\_2"} el número de pulsaciones que dura la nota, \texttt{"y\_1"} el milisegundo en el que empieza la nota y \texttt{"y\_2"} el milisegundo en el que acaba la nota:
+Siendo 'x' el intervalo en pulsaciones e 'y' el intervalo en milisegundos:
 
 \begin{displaymath}
 	y_1 =  x_1 * l + gap
@@ -256,15 +242,4 @@ Una vez tenemos esta información, siendo \texttt{"gap"} el retraso respecto al 
 	y_2 = x_2 * l + y_1
 \end{displaymath}
 
-Se calculan los tonos MIDI que corresponden a cada nota, haciendo la media de las frecuencias que estén dentro del principio y fin de cada nota, descartando aquellas que no lleguen al nivel mínimo de confianza establecido en los argumentos y transformando la frecuencia media obtenida de hercios a notas MIDI con la función \texttt{hz\_to\_midi} de librosa.
-
-Finalmente, el programa escribe un archivo de texto con los tonos actualizados en la localización indicada por los argumentos.
-
-\subsection{Tests}
-
-El código añadido durante el desarrollo de este hito está cubierto tanto por tests unitarios como tests de integración al 100\%.
-
-Los tests se han definido con la intención de cubrir un único caso lógico por cada test, lo que permite saber con precisión que funciona exactamente y que no, y cubrir la mayor cantidad posible de casos lógicos.
-
-Para mejorar la legibilidad, reusabilidad y el mantenimiento de los tests los datos de prueba han sido definidos como constantes, en un archivo común si son usados en múltiples módulos o en el módulo correspondiente si solo son usados por uno de ellos.
-
+Finalmente, para calcular los tonos de cada nota, se estiman las frecuencias en cada intervalo de tiempo utilizando CREPE, se hace la media descartando las predicciones que no superen la confianza mínima deseada, y se transforma las frecuencias obtenidas de hercios a MIDI utilizando librosa.
