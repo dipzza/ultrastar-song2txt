@@ -198,26 +198,29 @@ Adicionalmente, es una opción excelente para el proyecto, ya que, proporciona f
 
 La técnica usada para estimar la frecuencia fundamental de la voz debe tener la mayor precisión posible, teniendo en cuenta la rapidez con la que se completa la estimación como algo secundario. La precisión es la principal prioridad, ya que, es preferible que el creador de karaoke espere más tiempo a que tenga revisar manualmente las predicciones incorrectas.
 
-Algoritmos clásicos como pYIN \cite{pYIN} son rápidos. Sin embargo, los enfoques utilizando redes neuronales, como CREPE \cite{CREPE} y SPICE \cite{SPICE}, son el actual estado del arte y gozan de mayor precisión como se puede observar en la figura \ref{fig:crepecomparison}.
+Algoritmos clásicos como pYIN \cite{pYIN} son rápidos. Sin embargo, los enfoques utilizando redes neuronales, como CREPE \cite{CREPE} y SPICE \cite{SPICE}, han logrado mayor precisión como se puede observar en las figuras \ref{fig:crepecomparison} y \ref{fig:spicecomparison}.
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.7\linewidth]{logos/crepe_comparison}
-	\caption{Comparación de CREPE con algoritmos clásicos \cite{CREPE}.}
+	\caption{Comparación de CREPE con algoritmos clásicos\protect\footnotemark.}
 	\label{fig:crepecomparison}
 \end{figure}
+
+\footnotetext{Imagen del repositorio de CREPE (\url{https://github.com/marl/crepe}) con licencia\texttt{ MIT}.}
 
 En la figura \ref{fig:spicecomparison}, extraída del ensayo de SPICE, se puede observar como la precisión de CREPE y SPICE es muy similar, con una ligera ventaja de CREPE en el conjunto de datos de prueba que contiene más muestras con voz.
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.7\linewidth]{logos/spice_comparison}
-	\caption{Comparación de SPICE con CREPE.}
+	\caption{Comparación de SPICE con CREPE\protect\footnotemark.}
 	\label{fig:spicecomparison}
 \end{figure}
 
-Teniendo esto en cuenta, que CREPE ha recibido mejoras después de su publicación original\footnote{\url{https://pypi.org/project/crepe/}}, que provee modelos de distintos tamaños según la compensación de velocidad y exactitud deseada y que su integración en el proyecto es más sencilla, se considera CREPE mejor opción que SPICE y es la elegida para estimar las frecuencias fundamentales.
+\footnotetext{Imagen del ensayo de SPICE \cite{SPICE} con licencia \texttt{CC BY 4.0}.} 
 
+Teniendo esto en cuenta, que CREPE ha recibido mejoras después de su publicación original\footnote{\url{https://pypi.org/project/crepe/}}, que provee modelos de distintos tamaños según la compensación de velocidad y exactitud deseada y que su integración en el proyecto es más sencilla, se considera CREPE el actual estado del arte y la opción elegida para estimar las frecuencias fundamentales.
 
 \subsection{Descripción del proceso completo de la aplicación}
 
