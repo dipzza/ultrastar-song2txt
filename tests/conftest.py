@@ -1,8 +1,9 @@
 import pytest
 
 import song2txt.txt_parser.song_line as sl
-from song2txt.txt_parser.ultrastar_txt import UltraStarTXT
-from song2txt.txt_parser.metadata import MetaData
+from song2txt.txt_parser.ultrastar_txt import UltraStarTXT, FILE_END
+from song2txt.txt_parser.metadata import MetaData, TITLE_TAG, ARTIST_TAG, \
+    MP3_TAG, BPM_TAG, RELATIVE_TAG, GAP_TAG, YEAR_TAG, META_STR_FALSE
 
 # Constants
 # Song Lines
@@ -15,25 +16,16 @@ END_BEAT = 1
 
 # TXT parsing
 PATH = 'song.txt'
-FILE_END = 'E'
 
 # Metadata
-TITLE_TAG = 'TITLE'
 TITLE = 'song name'
-ARTIST_TAG = 'ARTIST'
 ARTIST = 'artist name'
-MP3_TAG = 'MP3'
 MP3 = 'song name.mp3'
-BPM_TAG = 'BPM'
 BPM = 300.0
 BPM_STR = '300'
-RELATIVE_TAG = 'RELATIVE'
 RELATIVE = False
-RELATIVE_STR = 'NO'
-GAP_TAG = 'GAP'
 GAP = 10.5
 GAP_STR = '10.5'
-YEAR_TAG = 'YEAR'
 YEAR = 2007
 YEAR_STR = '2007'
 
@@ -53,7 +45,7 @@ def metadata_text():
     text += model.format(MP3_TAG, MP3)
     text += model.format(BPM_TAG, BPM_STR)
     text += model.format(YEAR_TAG, YEAR_STR)
-    text += model.format(RELATIVE_TAG, RELATIVE_STR)
+    text += model.format(RELATIVE_TAG, META_STR_FALSE)
     text += model.format(GAP_TAG, GAP_STR)
 
     return text

@@ -4,6 +4,8 @@ from typing import List
 from .metadata import MetaData
 from .song_line import Note, SongLine
 
+FILE_END = 'E'
+
 
 @dataclass
 class UltraStarTXT:
@@ -14,7 +16,7 @@ class UltraStarTXT:
         text = str(self.metadata)
         for line in self.song_lines:
             text += str(line)
-        text += 'E'
+        text += FILE_END
 
         return text
 
