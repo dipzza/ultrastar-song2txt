@@ -18,10 +18,11 @@ BOOL_META_TAGS = 'RELATIVE'
 BOOL_META_TRUE = 'YES'
 FLOAT_META_TAGS = ['BPM', 'GAP', 'VIDEOGAP', 'PREVIEWSTART']
 
+CODE_PAGES = ['utf-8', 'windows-1250', 'windows-1252']
+
 
 def read_file(path: PathLike) -> UltraStarTXT:
-    cp_list = ['utf-8', 'windows-1252', 'ISO-8859-1']
-    text = str(from_path(path, cp_isolation=cp_list).best())
+    text = str(from_path(path, cp_isolation=CODE_PAGES).best())
 
     return parse_text(text)
 
