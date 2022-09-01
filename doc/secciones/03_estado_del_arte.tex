@@ -22,3 +22,66 @@ Algunas de las tareas son más complejas o tardan más en completarse. Definir l
 ¿Debe darse prioridad a la automatización de estas tareas, por ser las más complejas? Es un argumento a tener en cuenta, sin embargo, es importante valorar las soluciones ya existentes para decidir el enfoque del trabajo, analizadas en el capítulo \ref{ch:artstate} sobre el estado del arte.
 
 \section{Estado del arte}
+
+\subsection{Formatos para definir de canciones}
+
+Para conocer que formatos son los más usados se han analizado los videojuegos de karaoke actuales.
+
+\begin{table}[h!]
+	\begin{threeparttable}
+		\caption{Compatibilidad en videojuegos de karaoke.}
+		\begin{tabular}{ |c|>{\centering\arraybackslash}m{0.35\textwidth}|c|c|}
+			\hline
+			\textbf{Videojuego} & \textbf{Plataformas compatibles} & \textbf{Tipo de software} & \textbf{Formato usado} \\
+			\hline
+			UltraStar Deluxe & Linux, Windows, macOS & Libre & UltraStar \\
+			UltraStar Play & Linux, Windows, macOS, Android & Libre & UltraStar \\
+			Performous & Linux, Windows, macOS & Libre & UltraStar \\
+			Vocaluxe & Windows & Libre & UltraStar \\
+			SingStar & PS3, PS4 & Privativo & Desconocido\tnote{1} \\
+			Let's Sing 2022 & PS4, PS5, Xbox One, Xbox Series, Nintendo Switch & Privativo & VXLA\tnote{2} \\
+			\hline
+		\end{tabular}
+		\begin{tablenotes}
+			\item [1] El formato utilizado es desconocido, solo era posible añadir canciones comprándolas en la tienda online integrada, cerrada en 2020. \url{https://www.eurogamer.net/sony-shutting-down-singstars-servers-at-the-start-of-next-year}.
+			\item [2] La única forma oficial de añadir canciones es comprarlas en una tienda online con una oferta reducida, pero existen métodos no oficiales para añadir canciones personalizadas a partir del formato UltraStar.  \url{https://gbatemp.net/threads/tutorial-add-custom-songs-to-lets-sing-2022-from-ultrastar.607817/}.
+		\end{tablenotes}
+	\end{threeparttable}
+\end{table}
+
+El estándar de facto en los videojuegos de software libre es el formato UltraStar y, ya sea de forma nativa o a través de un conversor, es compatible con todos aquellos que permiten añadir canciones personalizadas.
+
+
+
+\subsection{Automatización de tareas en la creación de canciones}
+
+El programa más popular, \href{https://github.com/UltraStar-Deluxe/UltraStar-Creator}{UltraStar Creator}, guía al usuario en la creación y facilita muchas de las tareas:
+
+\begin{itemize}
+	\item{Facilita la obtención de metadatos al ser capaz de extraer los contenidos de un archivo MP3 y detectar las pulsaciones por minuto a partir del audio.}
+	\item{Separa automáticamente la letra de la canción en fonemas según el idioma de esta.}
+	\item{Facilita definir los intervalos de tiempo en los que ocurren las notas, para ello, se reproduce la canción a una velocidad reducida y el programa pide pulsar una tecla cada vez que el usuario escuche una nota nueva, a partir de esto crea las notas con intervalos de tiempo y fonemas asociados.}
+\end{itemize}
+
+Editores como \href{https://github.com/sarutasan72/Yass}{Yass} o el integrado en \href{https://usplay.net/#song-editor}{UltraStar Play} proveen una interfaz adecuada para afinar la temporización de las notas y asignar los tonos correspondientes, pero de modo manual.
+
+Estas herramientas simplifican el proceso de creación, no obstante, ninguna de ellas provee una solución conveniente para la asignación de tonos.
+
+Para automatizar esta tarea el proyecto más prometedor es la aplicación\texttt{ \href{https://github.com/paradigmn/ultrastar\_pitch}{ultrastar-pitch}}, publicada en 2020, que a partir de un archivo con toda la información necesaria excepto los tonos de las notas, completa esta información estimándolos con una red neuronal entrenada por el autor. No hay disponible una evaluación de las prestaciones detallada, el autor comenta que la precisión según el tipo de canción puede estar entre el 30\% y el 90\%. Tras probar experimentalmente el programa queda claro que se encuentra muy lejos de lo deseado, incluso en las canciones en las que mejor funciona (baladas con voz femenina) sigue siendo necesaria una revisión manual para obtener una asignación de tonos correcta.
+
+Aparte de la poca precisión, no hay documentación sobre las técnicas utilizadas y el proceso de instalación requiere instalar programas externos que no están especificados en las instrucciones.
+
+
+\section{Mejoras al estado del arte}
+
+Actualmente, es necesario buscar y establecer manualmente la letra de la canción y los metadatos que no se tengan en un archivo MP3. Esta información podría proveerse automáticamente a partir de \textit{API} públicas u otros métodos.
+
+Respecto a la asignación automática de tonos sería deseable:
+
+\begin{itemize}
+	\item{Mejorar la precisión con técnicas para la estimación de la frecuencia fundamental que representen el estado del arte actual.}
+	\item{Favorecer mejoras posteriores al trabajo realizado, documentando los métodos empleados, el proceso de decisión y los resultados obtenidos y desarrollando un código modular fácil de mantener.}
+	\item{Simplificar el proceso de instalación y el uso de las herramientas.}
+\end{itemize}
+
+Otra carencia del estado del arte es que, aunque es posible simplificar la tarea, se sigue requiriendo un proceso manual para definir los intervalos de tiempo de las notas. Sin embargo, la viabilidad de automatizar esta tarea con las técnicas actuales es debatible y requiere de más investigación. Los avances recientes en sincronización automática de subtítulos con audio \cite{Sub-Sync, Deep-Sync} presentan un retraso medio demasiado alto para los requisitos de un videojuego de karaoke, por lo que un posible acercamiento sincronizando los fonemas de la canción no parece factible.
