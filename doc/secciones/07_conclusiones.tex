@@ -1,2 +1,33 @@
 \chapter{Conclusiones y trabajos futuros}
 
+\section{Conclusiones}
+
+Con el trabajo realizado se ha conseguido avanzar en la creación automática de canciones para el formato UltraStar, cumpliendo el objetivo fijado para el proyecto.
+
+Se ha contribuido al estado del arte, desarrollando la primera biblioteca pública en Python para trabajar con el formato UltraStar e implementando una aplicación para la asignación automática de tonos, que respecto a las existentes previamente: 
+
+\begin{itemize}
+	\item{Usa técnicas para la estimación de la frecuencia fundamental de mayor precisión, gracias a los avances recientes en redes neuronales.}
+	\item{Provee una instalación más accesible con un empaquetado moderno, compatible con los principales sistemas operativos de escritorio y sin necesidad de instalar manualmente programas de terceros.}
+	\item{Aporta documentación sobre los métodos empleados y las decisiones tomadas, tanto en esta memoria como en el propio repositorio donde se aloja la aplicación.}
+\end{itemize}
+
+
+Personalmente, la realización del trabajo ha servido no solo para demostrar habilidades adquiridas durante el grado, sino también como un vehículo para seguir aprendiendo sobre las apasionantes tareas propias de la creación de software eligiendo las soluciones más apropiadas.
+
+Por último, me gustaría destacar la importancia del software libre, sin el cual este trabajo no habría sido posible, ya que ha sido crucial tanto en el aprendizaje como en el desarrollo, y, por tanto, la importancia de liberar el propio trabajo para facilitar futuras aportaciones.
+
+\section{Trabajos futuros}
+
+Alcanzar la automatización completa de las tareas descritas en la sección \ref{sec:problemdescription} está todavía muy lejos. Por ello, en contribuciones futuras se insta a seguir las siguientes líneas de trabajo:
+
+\begin{itemize}
+	\item{Desarrollar herramientas para obtener los metadatos de canciones a partir de servicios públicos en línea y guardarlos en el formato UltraStar (posiblemente haciendo uso de la librería implementada en este trabajo).}
+	\item{Investigar e integrar soluciones para mejorar la precisión o la velocidad en la estimación de tonos, como:
+	\begin{itemize}
+		\item{Reducir la influencia de predicciones atípicas, ya sea haciendo la mediana de las predicciones en vez de la media u obviándolas si su desviación típica es demasiado alta.}
+		\item{Utilizar técnicas del estado del arte para separar la voz del cantante del resto del audio previamente a la predicción, reduciendo así el ruido.}
+		\item{Incrementar la precisión con nuevos modelos de redes neuronales o técnicas posteriores al desarrollo del proyecto, como\texttt{ HarmoF0}\cite{harmof0}.}
+	\end{itemize}
+	}
+\end{itemize}
