@@ -38,7 +38,7 @@ Con la intención de hacer las \textbf{comprobaciones más extensas y estrictas}
 
 Configurar un \textit{linter} (herramienta que lleva a cabo un análisis estático del código para detectar errores) es un paso básico para garantizar la calidad del código.
 
-Se busca un \textit{linter} fácil de configurar, que detecte errores de programación y compruebe la adherencia a la guía de estilo \href{https://peps.python.org/pep-0008/}{PEP8}.
+Se busca un \textit{linter} fácil de configurar, que detecte errores de programación y compruebe la adherencia a la guía de estilo PEP8 \cite{pep8}.
 
 Existen multitud de opciones que proveen estas funcionalidades, o parte de ellas, para código escrito en Python (pycodestyle, pylint, pyflakes, flake8,...). Se ha escogido flake8 porque además de agrupar la funcionalidad deseada al detectar errores de programación y estilísticos, incluye comprobaciones sobre la complejidad del código y es rápida.
 
@@ -63,7 +63,7 @@ Un \textbf{entorno de desarrollo reproducible} que defina sus dependencias
 
 Para ello se busca una herramienta para la gestión de \textbf{entornos virtuales} (entornos aislados que no dependen del resto del sistema), \textbf{dependencias}, el \textbf{empaquetado} y \textbf{publicación}.
 
-Además de proporcionar esta funcionalidad se espera que la herramienta sea simple, rápida y use el formato de archivo de configuración TOML, establecido como estándar en las propuestas de mejora de Python \href{https://peps.python.org/pep-0517/}{PEP517}, \href{https://peps.python.org/pep-0518/}{PEP518} y \href{https://peps.python.org/pep-0621/}{PEP621}.
+Además de proporcionar esta funcionalidad se espera que la herramienta sea simple, rápida y use el formato de archivo de configuración TOML, establecido como estándar en las propuestas de mejora de Python PEP517 \cite{pep517}, PEP518 \cite{pep518} y PEP621 \cite{pep621}.
 
 Existen multitud de opciones (pip, venv, pipenv, setuptools, distutils, Poetry...), pipenv posee las características esperadas, pero solo para la gestión de entornos virtuales y dependencias, la única que agrupa toda la funcionalidad necesaria y utiliza un único fichero TOML para toda la configuración es \textbf{Poetry} y, por lo tanto, esta es la herramienta que se ha utilizado.
 
@@ -149,7 +149,7 @@ Inicialmente, se consideró la primera opción porque no añadía dependencias a
 
 Por esta razón se decidió emplear el segundo enfoque con mayor fiabilidad. Teniendo en cuenta las pruebas de rendimiento disponibles en la \href{https://github.com/Ousret/charset_normalizer}{web} de Charset Normalizer y el tamaño de cada librería la opción más adecuada a las necesidades del proyecto es Charset Normalizer, ya que, presenta la mayor precisión y el menor tamaño de las opciones consideradas.
 
-La implementación final estima el formato de codificación del archivo de texto entre varias opciones comunes (el formato estándar UTF-8 definido en la \href{https://www.rfc-editor.org/rfc/rfc3629}{RFC 3629} y aquellos empleados por defecto en versiones antiguas del sistema operativo Windows). Si el texto sigue sin descodificarse correctamente, como último recurso, el usuario podría hacer uso de la utilidad de línea de comandos incluida en Charset Normalizer para transformar el archivo de texto a UTF-8 seleccionando manualmente la interpretación correcta.
+La implementación final estima el formato de codificación del archivo de texto entre varias opciones comunes (el formato estándar UTF-8 definido en la RFC 3629 \cite{rfc3629} y aquellos empleados por defecto en versiones antiguas del sistema operativo Windows). Si el texto sigue sin descodificarse correctamente, como último recurso, el usuario podría hacer uso de la utilidad de línea de comandos incluida en Charset Normalizer para transformar el archivo de texto a UTF-8 seleccionando manualmente la interpretación correcta.
 
 \subsubsection{Diseño de las estructuras de datos}
 
