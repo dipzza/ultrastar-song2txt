@@ -122,16 +122,16 @@ Los paquetes implementados, sus módulos y la relación de uso entre ellos puede
 \end{figure}
 
 
-\subsection{Librería para trabajar con archivos UltraStar txt}
+\subsection{Librería para trabajar con el formato UltraStar}
 \label{sec:txtparser}
 
-Para poder empezar a construir la aplicación es necesario poder trabajar con los archivos de texto que definen las canciones de karaoke. Concretamente, con el formato de texto estándar UltraStar txt\footnote{\url{https://github.com/UltraStar-Deluxe/Play/wiki/UltraStar-txt-File-Format}},  compatible con la mayoría de videojuegos de karaoke libres, incluidos los mencionados en la sección \ref{sec:motivation}.
+Para poder empezar a construir la aplicación es necesario poder trabajar con los archivos que definen las canciones de karaoke. Concretamente, con el formato de texto estándar UltraStar\footnote{\url{https://github.com/UltraStar-Deluxe/Play/wiki/UltraStar-txt-File-Format}},  compatible con la mayoría de videojuegos de karaoke como se puede observar en la sección \ref{sec:formatcomparison}.
 
 Con esta intención, se ha construido una librería para leer este tipo de archivos transformando el texto a estructuras de datos apropiadas para trabajar con ellas y para escribir nuevos archivos generando el texto correspondiente a partir de las estructuras de datos.
 
 \subsubsection{Lectura y decodificación}
 
-En la definición del formato UltraStar \texttt{txt} no se establece la codificación de caracteres que deben usar los archivos, y como resultado, se comparten con distintas codificaciones. Tampoco es posible determinar la codificación a partir del archivo de forma sencilla, ya que son archivos de texto plano donde no se encuentra especificada.
+En la definición del formato UltraStar no se establece la codificación de caracteres que deben usar los archivos, y como resultado, se comparten con distintas codificaciones. Tampoco es posible determinar la codificación a partir del archivo de forma sencilla, ya que son archivos de texto plano donde no se encuentra especificada.
 
 Buscando la mayor compatibilidad se consideraron los siguientes acercamientos para decodificar los archivos:
 
@@ -156,7 +156,7 @@ La implementación final estima el formato de codificación del archivo de texto
 Como plantillas para las estructuras de datos se han definido las clases representadas en la figura \ref{fig:class1}, intentando crear capas de abstracción adecuadas utilizando un modelado guiado por el dominio relativo al formato. Además, se han definido algunos comportamientos asociados:
 \begin{itemize}
 	\item{Comprobaciones de que los valores que se asignen son válidos (por ejemplo, la duración de una nota no puede ser negativa) tanto en creación como en modificación, en caso contrario, se indica el problema lanzando una excepción del tipo correspondiente con un mensaje que explica el error.}
-	\item{Métodos para generar el texto que correspondería en un archivo UltraStar \texttt{txt} a partir de los datos almacenados en el objeto.}
+	\item{Métodos para generar el texto que correspondería en un archivo UltraStar a partir de los datos almacenados en el objeto.}
 	\item{Implementación del método \texttt{\_\_eq\_\_} para poder comparar objetos  y determinar si son iguales.}
 \end{itemize}
 
@@ -226,7 +226,7 @@ Teniendo esto en cuenta, que CREPE ha recibido mejoras después de su publicaci�
 
 \subsection{Cálculo de los tonos MIDI}
 
-Para calcular los tonos es necesario conocer el intervalo de tiempo en el que se produce cada nota en la canción. Esto se puede obtener transformando la información extraída del archivo UltraStar \texttt{txt}, que nos proporciona la pulsación en la que empieza y cuantas pulsaciones dura cada nota, las pulsaciones por minuto \texttt{"bpm"} de la canción y el retraso de las notas respecto al inicio de la canción \texttt{"gap"} en milisegundos.
+Para calcular los tonos es necesario conocer el intervalo de tiempo en el que se produce cada nota en la canción. Esto se puede obtener transformando la información extraída del archivo UltraStar, que nos proporciona la pulsación en la que empieza y cuantas pulsaciones dura cada nota, las pulsaciones por minuto \texttt{"bpm"} de la canción y el retraso de las notas respecto al inicio de la canción \texttt{"gap"} en milisegundos.
 
 Teniendo en cuenta que las pulsaciones por minuto son multiplicadas por 4 para tener un posicionamiento de notas más preciso, la duración de una pulsación en milisegundos es:
 
