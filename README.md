@@ -27,3 +27,6 @@ O directamente
     make
     
 (que habrá que editar si el nombre del archivo del proyecto cambia)
+
+## This project is abandoned
+Look at https://github.com/rakuri255/UltraSinger for an alternative
